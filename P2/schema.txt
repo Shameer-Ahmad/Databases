@@ -1,18 +1,43 @@
-review(*user_ID*, *restaurant_ID*, *date_time*, text, score)
-neighborhood(*neighborhood_name*, zip_codes, common_cuisines, description)
-customer(*username*, password, first_name, middle_initial, last_name, street_number, street_name, apt_number, city, state, zip, date_of_birth, rank)
-event(*event_ID*, restaurant, date_time, capacity, participating_users)
-menu_item(*food_item_name*, restaurant, review_score, cuisine_type)
-owner_admin(*owner_ID*, first_name, middle_intial, last_name, email)
-owner_admin_phone(*owner_ID*, *phone_number*)
-restaurant(*restaurant_ID*, name, neighborhood, street_number, street_name, apt_number, city, state, zip, rating, cuisine type, well_known _items)
+
+restaurant(*restaurant_ID*, name, street_number, street_name, apt_number, city, state, zip_code, cuisine_type)
+- FOREIGN KEY zip_code REFERENCES neighborhood_zip(zip_code)
+- Composite key: address (street_number, street_name, apt_number, city, state, zip_code)
+- NOT NULL(name, street_number, street_name, city, state, zip_code)
+
 restaurant_phone(*restaurant_ID*, *phone_number*)
-posts(*user_ID*, *restaurant_ID*, *date_time*, text, score, first_name, last_name, rank, well_known_items)
-receives(*user_ID*, *restaurant_ID*, *date_time*, text, score, rating, well_known_items)
-located_in(*restaurant_ID*, neighborhood_name)
-participates(*username*, *event_ID*, restaurant, participating_users, age(), rank)
-enjoys(*username*, food_item_name)
-sells()
-hosts()
-owns()
-lives()
+- FOREIGN KEY (restaurant_ID) REFERENCES restaurant(restaurant_ID)
+- CHECK(phone_number LIKE ‘___-___-____’)
+
+owner_admin(*owner_ID*, first_name, middle_initial, last_name, email)
+- UNIQUE(email)
+- NOT NULL(first_name, last_name, email)
+
+owner_phone(*owner_ID*, *phone_number*)
+- FOREIGN KEY (owner_ID) REFERENCES owner_admin(owner_ID)
+- CHECK(phone_number LIKE ‘___-___-____’)
+
+event(*event_ID*, date_time, capacity)
+- CHECK(capacity > 0)
+
+menu_item(*item_name*, cuisine_type, description)
+
+review(*user_ID*,*date_time*, text, score)
+- FOREIGN KEY (user_ID) REFERENCES customer(username)
+- CHECK(score BETWEEN 0.0 AND 5.0)
+
+neighborhood(*neighborhood_name*, common_cuisines, description)
+
+neighborhood_zip(*neighborhood_name*, *zip_code*)
+- FOREIGN KEY (neighborhood_name) REFERENCES neighborhood(neighborhood_name)
+- NOT NULL(zip_code)
+
+customer(*username*, password, first_name, middle_initial, last_name, street_number, street_name, apt_number, city, state, zip_code, date_of_birth)
+- UNIQUE(username)
+- FOREIGN KEY (zip_code) REFERENCES neighborhood_zip(zip_code)
+- NOT NULL (password, first_name, last_name, city, state, zip_code)
+- CHECK(zip_code >= 02108 AND zip_code <= 02467)
+- CHECK(LENGTH(password) >= 8)
+
+customer_phone(*username*, *phone_number*)
+- FOREIGN KEY (username) REFERENCES customer(username)
+- CHECK(phone_number LIKE ‘___-___-____’)
