@@ -6,7 +6,11 @@ We began again by imagining what our application would actually look like on the
 
 This supported an ease in our E-R analysis first on a chalkboard, and then after moving around attributes, entities, and associated relationships, we formatted this into a clear E-R diagram using app.diagrams.net where we could share the diagram between us and collaborate. 
 
-Next, we worked on formalizing this diagram into a schema - and therefore normalizing.
+One thing we noticed in making the E-R diagram was that there were a lot of attributes we were including which complicated the diagram and actually were foreign keys linking to other entities. For example, we removed an attribute called well_known_items from the restaurant entity, as instead these food items could be derived from the review and menu_item entities.
 
-Normalization - Restaurants and Neighborhoods attribute for restaurant 
-Is there any normalization we need to do for the menu items table?
+Next, we wrote out the relational schemas in a schema.txt file with the constraints -which led to significant normalizing as well. In our initial schema, the restaurant entity included both an address attribute (with street, city , and zip code) and a separate neighborhood attribute. This introduced redundancy and allowed for potential errors with data inconsistencies. We realized that the essential attribute was the address, since that is a core part of the restaurant, the neighborhood could be placed in a separate entity which could be referenced by using the zip-code as a foreign key. The idea is that the neighborhood could be located using the restaurant’s zip code. This enforces consistency since a restaurant’s neighborhood is now not entered multiple times in the table, which is error prone, instead it is derived through its zip code. 
+
+Another thing we realized was that some of the basic attributes we outlined in our E-R diagram had to be better thought out. For example, we knew that we wanted reviews to contain a score, but in determining constraints we had to decide that we wanted it to be a float rating between 0.0 and 5.0 as compared to a star system like we’ve seen before on other applications.
+
+Working through the stages of converting between these deliverables greatly supported our learning as we came to understand the intricacies of their structure better - for example, how multi-valued attributes must have their own relation schema. 
+
