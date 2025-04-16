@@ -95,5 +95,5 @@ CREATE TABLE customer_phone (
     phone_number TEXT,
     PRIMARY KEY (username, phone_number),
     FOREIGN KEY (username) REFERENCES customer(username),
-    CHECK (phone_number LIKE '___-___-____')
+    CHECK (phone_number LIKE '___-___-____') -- Replace this with regex in application code
 );
