@@ -14,3 +14,5 @@ Another thing we realized was that some of the basic attributes we outlined in o
 
 Working through the stages of converting between these deliverables greatly supported our learning as we came to understand the intricacies of their structure better - for example, how multi-valued attributes must have their own relation schema. 
 
+We worked collaboratively on coming up with an idea for our project and brainstorming its goals, what we wanted the frontend of the application to look like, and some basic implementation ideas. In terms of our individual contributions, Madie worked on the E-R diagram as well as the first drafts of the schema and SQL code. Anthony worked on the schema implementation and how some tables could be normalized to prevent duplication.
+
