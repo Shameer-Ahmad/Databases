@@ -1,7 +1,11 @@
 from flask import Blueprint
 
-view = Blueprint("view", __name__)
+views = Blueprint("views", __name__)
 
-@view.route("/")
+@views.route("/")
 def home():
-    return "Hello, world!!"
+    return "Hello, world!"
+
+@views.route("/about")
+def about():
+    return "About this app"
