@@ -1,7 +1,7 @@
 from website import create_app
 import sqlite3
 
-DB_PATH = "foodies.db"
+DB_PATH = "foodies.sqlite3"
 SCHEMA_PATH = "schema.sql"
 
 def init_db():
