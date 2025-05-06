@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang = "en">
+    <head>
+        <title>Events</title>
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    </head>
+
+    <body>
+        <div class="container">
+            <h1>Upcoming Events</h1>
+            <ul id="events-list">
+                {% for ev in events %}
+                    <li>#{{ ev.event_ID}} - {{ ev.date_time }}</li>
+                {% else %}
+                    <li><em> No Events Shecduled. </em></li>
+                {% endfor %}
+                </ul>
+        </div>
+        <script src = "{{ url_for('static', filename='js/events.js') }}"></script>
+    </body>
+</html>

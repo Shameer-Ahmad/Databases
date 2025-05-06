@@ -1,5 +1,5 @@
 
-from flask import Blueprint, request, jsonify
+from flask import Blueprint, request, jsonify, render_template
 from website.db import get_db_connection
 events = Blueprint("events", __name__)
 
@@ -10,9 +10,9 @@ def list_events():
     conn = get_db_connection()
     events = conn.execute("SELECT event_ID, date_time FROM event").fetchall()
     conn.close()
-    results = [dict(row) for row in events]
+    events_list = [dict(row) for row in events]
 
-    return jsonify(results)
+    return render_template("events.html", events=events_list)
 
 # Allows the user to create a new event
 @events.route("/", methods=["POST"])
