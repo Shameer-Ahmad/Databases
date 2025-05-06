@@ -15,7 +15,7 @@ def create_review():
         INSERT INTO review (user_id, restaurant_id, date_time, text, score) 
         VALUES (?, ?, ?, ?, ?)
     """, (
-        data.get("user_id"),
+        data.get("user_id"), ### User ID will need to be updated -> TAKE OUT
         data.get("restaurant_id"), 
         data.get("date_time"),
         data.get("text"),
@@ -27,17 +27,18 @@ def create_review():
 
     return jsonify({
         "message": "Review added successfully!",
-        "user_ID": data.get("user_ID"),
+        "user_ID": data.get("user_ID"), ### User ID will need to be updated -> TAKE OUT
         "date_time": data.get("date_time")
     }), 201
 
 # Gets all reviews for a user using user_id
 @reviews.route("/mine", methods=["GET"])
 def my_reviews():
-    #user_id = request.args.get("user_id")
+    #user_id = request.args.get("user_id")  ### User ID will need to be updated -> TAKE OUT
     user_id = 5  # For testing purposes, hardcoded user_id to 5 -> TAKE OUT
+
     if not user_id:
-        return jsonify({"error": "User ID is required"}), 400
+        return jsonify({"error": "User ID is required"}), 400 ### User ID will need to be updated -> TAKE OUT
     
     conn = get_db_connection()
     cur  = conn.cursor()
