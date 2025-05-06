@@ -32,3 +32,16 @@ CREATE TABLE restaurant_phone (
     FOREIGN KEY (restaurant_id) REFERENCES restaurant(restaurant_id),
     CHECK (phone_number LIKE '___-___-____')
 );
+
+DROP TABLE IF EXISTS review;
+
+CREATE TABLE review (
+    user_id TEXT,
+    restaurant_id INTEGER,
+    date_time DATETIME,
+    text TEXT,
+    score REAL CHECK (score BETWEEN 0.0 AND 5.0),
+    PRIMARY KEY (user_id, date_time),
+    FOREIGN KEY (user_id) REFERENCES customer(username),
+    FOREIGN KEY (restaurant_id) REFERENCES restaurant(restaurant_id)
+);
