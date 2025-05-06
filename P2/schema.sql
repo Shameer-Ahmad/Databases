@@ -9,9 +9,13 @@ CREATE TABLE restaurant (
     state TEXT NOT NULL,
     zip_code TEXT NOT NULL,
     cuisine_type TEXT,
+
     FOREIGN KEY (zip_code) REFERENCES neighborhood_zip(zip_code)
 );
 
+CREATE TABLE rsvp (
+    
+)
 CREATE TABLE restaurant_phone (
     restaurant_ID INTEGER,
     phone_number TEXT,

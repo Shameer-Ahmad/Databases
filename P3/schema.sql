@@ -1,4 +1,6 @@
 DROP TABLE IF EXISTS user;
+DROP TABLE IF EXISTS rsvp;
+DROP TABLE IF EXISTS event;
 
 CREATE TABLE user (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -32,3 +34,20 @@ CREATE TABLE restaurant_phone (
     FOREIGN KEY (restaurant_id) REFERENCES restaurant(restaurant_id),
     CHECK (phone_number LIKE '___-___-____')
 );
+
+CREATE TABLE event (
+    event_ID INTEGER PRIMARY KEY,
+    date_time DATETIME,
+    capacity INTEGER CHECK (capacity > 0)
+);
+
+
+CREATE TABLE rsvp (
+    user_ID  INTEGER NOT NULL,
+    event_ID INTEGER NOT NULL,
+    PRIMARY KEY (user_ID, event_ID),
+    FOREIGN KEY (user_ID)  REFERENCES user(id),
+    FOREIGN KEY (event_ID) REFERENCES event(event_ID)
+);
+
+
