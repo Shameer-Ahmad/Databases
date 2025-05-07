@@ -1,5 +1,5 @@
 
-from flask import Blueprint, request, jsonify, render_template
+from flask import Blueprint, request, jsonify, render_template, redirect, url_for
 from website.db import get_db_connection
 events = Blueprint("events", __name__)
 
@@ -17,23 +17,24 @@ def list_events():
 # Allows the user to create a new event
 @events.route("/", methods=["POST"])
 def create_event():
-    data = request.get_json()
     
-    conn = get_db_connection()
-    cur = conn.cursor()
+    
+    
+    name = request.form["event_name"]
+    date_time = request.form["date_time"]
+    capacity = request.form["capacity"]
 
-    cur.execute("""
-        INSERT INTO event (event_ID, event_name, date_time, capacity)
-        VALUES (?, ?, , ?)
-    """, (
-        data.get("event_ID"), 
-        data.get("event_name"),
-        data.get("date_time"),
-        data.get("capacity"),
-    ))
+    conn = get_db_connection()
+   
+
+
+    conn.execute(
+        "INSERT INTO event (event_name, date_time, capacity)VALUES (?, ?, ?)" , 
+        (name, date_time, capacity)
+        )
     conn.commit()
     conn.close()
-    return "event created"
+    return redirect(url_for("events.list_events"))
 
 # Deletes an existing event
 @events.route("/<int:event_id>", methods=["DELETE"])
