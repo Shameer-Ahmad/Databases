@@ -5,9 +5,13 @@ Our project aims to address the problem of a lack of Boston area activity groups
 A list of members of our team and our respective roles in contributing to the project:
 
 Madie - Implementing reviews and restaurants blueprints, slidedeck, README narrative
+
 Katherine - Implementing events blueprints, front end design for events, ...
+
 Anthony - Front end design for ..., ...
+
 Shameer - Implementing authorization blueprint, ...
+
 Joseph - Testing engineer, README testing approach section, ...
 
 Instructions on deployment:
