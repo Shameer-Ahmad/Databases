@@ -4,15 +4,24 @@
 
 <!-- Banner Section -->
 <div class="banner">
-  <h1>Aviram's Diners</h1>
+    <h1>Aviram's Diners</h1>
+    <!-- Search Form Section -->
+    <form action="{{ url_for('restaurants.all_restaurants') }}" method="GET" class="search-form">
+        <div class="search-bar-container">
+            <input type="text" name="restaurant_name" placeholder="Search by Restaurant Name" class="search-bar">
+            <input type="text" name="neighborhood" placeholder="Search by Neighborhood" class="search-bar">
+            <input type="text" name="cuisine_type" placeholder="Search by Cuisine Type" class="search-bar">
+            <button type="submit" class="search-button">Search</button>
+        </div>
+    </form>
 </div>
 
 <section class="content">
-  <header>
-    {% block header %}{% endblock %}
-  </header>
-  {% for message in get_flashed_messages() %}
-    <div class="flash">{{ message }}</div>
-  {% endfor %}
-  {% block content %}{% endblock %}
+    <header>
+        {% block header %}{% endblock %}
+    </header>
+    {% for message in get_flashed_messages() %}
+        <div class="flash">{{ message }}</div>
+    {% endfor %}
+    {% block content %}{% endblock %}
 </section>

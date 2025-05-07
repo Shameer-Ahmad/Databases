@@ -7,13 +7,35 @@ restaurants = Blueprint("restaurants", __name__)
 # Gets all the restaurants
 @restaurants.route("/", methods=["GET"])
 def all_restaurants():
+    # Get the search parameters from the query string
+    restaurant_name = request.args.get("restaurant_name")
+    neighborhood = request.args.get("neighborhood")
+    cuisine_type = request.args.get("cuisine_type")
+    
     conn = get_db_connection()
-    restaurants = conn.execute("SELECT restaurant_name FROM restaurant").fetchall()
+
+    # Build SQL query based on whether the user is searching
+    query = "SELECT * FROM restaurant WHERE 1=1"
+    params = []
+
+    if restaurant_name:
+        query += " AND restaurant_name LIKE ?"
+        params.append(f"%{restaurant_name}%")
+
+    if neighborhood:
+        query += " AND city LIKE ?"
+        params.append(f"%{neighborhood}%")
+
+    if cuisine_type:
+        query += " AND cuisine_type LIKE ?"
+        params.append(f"%{cuisine_type}%")
+
+    # Execute the query with parameters
+    cursor = conn.execute(query, params)
+    restaurants = cursor.fetchall()
     conn.close()
 
-    results = [dict(row) for row in restaurants]
-
-    return jsonify(results)
+    return render_template("landing.html", restaurants=restaurants)
 
 # Gets the details of one restaurant using restaurant_id
 @restaurants.route("/<int:id>", methods=["GET"])
@@ -107,3 +129,6 @@ def delete_restaurant(id):
         return jsonify({"error": "Restaurant not found"}), 404
     
     return jsonify({"message": "Restaurant deleted successfully!"})
+
+
+#Restaurant Search 
