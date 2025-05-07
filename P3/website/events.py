@@ -8,7 +8,7 @@ events = Blueprint("events", __name__)
 @events.route("/")
 def list_events():
     conn = get_db_connection()
-    events = conn.execute("SELECT event_ID, date_time FROM event").fetchall()
+    events = conn.execute("SELECT event_ID, event_name, date_time FROM event").fetchall()
     conn.close()
     events_list = [dict(row) for row in events]
 
@@ -23,10 +23,11 @@ def create_event():
     cur = conn.cursor()
 
     cur.execute("""
-        INSERT INTO event (event_ID, date_time, capacity)
-        VALUES (?, ?, ?)
+        INSERT INTO event (event_ID, event_name, date_time, capacity)
+        VALUES (?, ?, , ?)
     """, (
         data.get("event_ID"), 
+        data.get("event_name"),
         data.get("date_time"),
         data.get("capacity"),
     ))

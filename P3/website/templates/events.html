@@ -10,11 +10,17 @@
             <h1>Upcoming Events</h1>
             <ul id="events-list">
                 {% for ev in events %}
-                    <li>#{{ ev.event_ID}} - {{ ev.date_time }}</li>
+                    <li>#{{ ev.event_ID}} - {{ ev.date_time }} - {{ ev.event_name }}</li>
                 {% else %}
-                    <li><em> No Events Shecduled. </em></li>
+                    <li><em> No Events Scheduled. </em></li>
                 {% endfor %}
-                </ul>
+            </ul>
+            <form id="add-event">
+                <input type="text" id="event_name" placeholder="Event Name" required>
+                <input type="datetime-local" id="date_time" required>
+                <input type="number" id="capacity" placeholder="Capacity" min="1" required>
+                <button type="submit">Add Event</button>
+            </form>
         </div>
         <script src = "{{ url_for('static', filename='js/events.js') }}"></script>
     </body>

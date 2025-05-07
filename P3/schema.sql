@@ -37,6 +37,7 @@ CREATE TABLE restaurant_phone (
 
 CREATE TABLE event (
     event_ID INTEGER PRIMARY KEY,
+    event_name TEXT,
     date_time DATETIME,
     capacity INTEGER CHECK (capacity > 0)
 );
