@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Register</title>
+    <script>
+        function toggleVerificationField() {
+            const role = document.getElementById('role').value;
+            const verificationField = document.getElementById('verification-field');
+            if (role === 'owner') {
+                verificationField.style.display = 'block';
+                document.getElementById('verification').required = true;
+            } else {
+                verificationField.style.display = 'none';
+                document.getElementById('verification').required = false;
+            }
+        }
+
+        window.onload = toggleVerificationField;
+    </script>
+</head>
+<body>
+    <form method="GET" action="{{ url_for('auth.logout') }}">
+        <button type="submit">Logout</button>
+    </form>
+    <h2>Register</h2>
+    <form method="POST" action="{{ url_for('auth.register') }}">
+        <label for="username">Username:</label>
+        <input type="text" name="username" id="username" required><br><br>
+
+        <label for="password">Password:</label>
+        <input type="password" name="password" id="password" required><br><br>
+
+        <label for="role">Are you a customer or owner?</label>
+        <select name="role" id="role" required onchange="toggleVerificationField()">
+            <option value="" disabled selected>Select your role</option>
+            <option value="customer">Customer</option>
+            <option value="owner">Owner</option>
+        </select><br><br>
+
+        <div id="verification-field" style="display: none;">
+            <label for="verification">Verification:</label>
+            <input type="text" name="verification" id="verification"><br><br>
+        </div>
+
+        <button type="submit">Register</button>
+    </form>
+</body>
+</html>
+
