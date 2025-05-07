@@ -133,3 +133,21 @@ li button:hover {
   border-color: #377ba8;
   box-shadow: 0 0 5px rgba(55, 123, 168, 0.5);
 }
+
+.banner {
+  background-color: #377ba8;  /* Your primary color */
+  color: white;
+  text-align: left;  /* Align the text to the left */
+  padding: 1rem 1rem;  /* Adjust padding for smaller text */
+  font-size: .5rem;  /* Smaller font size */
+  font-family: 'Arial', sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  margin-bottom: 2rem; /* Space between banner and content */
+}
+
+.banner h1 {
+  margin: 0;
+  padding-left: 10px;  /* Add some space from the left edge */
+}

@@ -1,47 +1,9 @@
 
-from flask import Blueprint, request, jsonify, render_template, redirect, url_for
+from flask import Blueprint, request, jsonify, render_template, redirect, url_for 
 from website.db import get_db_connection
 
 restaurants = Blueprint("restaurants", __name__)
 
-def create_restaurant_page():
-    return render_template("create_restaurant.html")
-
-def create_restaurant():
-    name = request.form["restaurant_name"]
-    street_number = request.form["street_number"]
-    street_name = request.form["street_name"]
-    apt_number = request.form.get("apt_number", "")
-    city = request.form["city"]
-    state = request.form["state"]
-    zip_code = request.form["zip_code"]
-    cuisine_type = request.form["cuisine_type"]
-    
-    conn = get_db_connection()
-    cur = conn.cursor()
-
-    cur.execute("""
-        INSERT INTO restaurant (restaurant_name, street_number, street_name, apt_number, city, state, zip_code, cuisine_type) 
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?)
-    """, (
-        name, 
-        street_number,
-        street_name,
-        apt_number,
-        city,
-        state,
-        zip_code,
-        cuisine_type
-    ))
-
-    conn.commit()
-    new_restaurant_id = cur.lastrowid
-    conn.close()
-
-    return redirect(url_for("restaurants.all_restaurants"))
-
-
-'''''
 # Gets all the restaurants
 @restaurants.route("/", methods=["GET"])
 def all_restaurants():
@@ -67,10 +29,15 @@ def restaurant_detail(id):
 
     return jsonify(dict(restaurant))
 
-# Creates a new restaurant
-@restaurants.route("/", methods=["POST"])
+@restaurants.route("/create", methods=["GET"])
+def create_restaurant_form():
+    return render_template("create_restaurant.html")
+
+# Creates a new restaurant (POST request)
+@restaurants.route("/create", methods=["POST"])
 def create_restaurant():
-    data = request.get_json()
+    # Get form data
+    data = request.form  # For form submissions
     
     conn = get_db_connection()
     cur = conn.cursor()
@@ -90,10 +57,11 @@ def create_restaurant():
     ))
 
     conn.commit()
-    new_restaurant_id = cur.lastrowid
+    new_restaurant_id = cur.lastrowid  # Get the ID of the newly inserted restaurant
     conn.close()
 
-    return jsonify({"message": "Restaurant added successfully!", "restaurant_id": new_restaurant_id}), 201
+    return redirect(url_for("restaurants.all_restaurants"))  # Or redirect to any page you want
+
 
 # Updates a restaurant using restaurant_id
 @restaurants.route("/<int:id>", methods=["PUT"])
@@ -139,4 +107,3 @@ def delete_restaurant(id):
         return jsonify({"error": "Restaurant not found"}), 404
     
     return jsonify({"message": "Restaurant deleted successfully!"})
-'''
