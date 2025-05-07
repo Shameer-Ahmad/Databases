@@ -1,13 +1,135 @@
+/* Global Body Styling */
 body {
-    font-family: Arial, sans-serif;
-    padding: 2rem;
-    background: #f5f5f5;
-  }
-  .container {
-    max-width: 600px;
-    margin: auto;
-    background: rgb(87, 19, 161);
-    padding: 1rem;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-  }
+  font-family: 'Arial', sans-serif;
+  padding: 2rem;
+  background: #f5f5f5;
+  margin: 0;
+}
+
+/* Container Styling */
+.container {
+  max-width: 600px;
+  margin: auto;
+  background: #377ba8;  /* Primary color */
+  padding: 2rem;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);  /* Increased shadow for more depth */
+}
+
+/* Heading Styling */
+.container h1 {
+  font-size: 2.2rem;
+  color: white;
+  margin-bottom: 1.5rem;
+  text-align: center;
+}
+
+/* Paragraph Styling */
+.container p {
+  color: white;
+  font-size: 1.1rem;
+  line-height: 1.6;
+  margin-bottom: 1.5rem;
+}
+
+/* Button Styling */
+.button {
+  background: #377ba8;
+  color: white;
+  padding: 0.75rem 1.25rem;
+  border: none;
+  border-radius: 8px;
+  font-size: 1.1rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease-in-out;
+  display: inline-block;
+  text-align: center;
+  margin-top: 1.5rem;
+}
+
+.button:hover {
+  background: #275a80;
+}
+
+/* Input Fields Styling */
+input[type="text"], input[type="number"], input[type="datetime-local"] {
+  width: 100%;
+  padding: 0.75rem;
+  margin-bottom: 1rem;
+  border-radius: 8px;
+  border: 1px solid lightgray;
+  font-size: 1rem;
+  box-sizing: border-box;
+}
+
+input[type="text"]:focus, input[type="number"]:focus, input[type="datetime-local"]:focus {
+  outline: none;
+  border-color: #377ba8; /* Primary color focus */
+  box-shadow: 0 0 5px rgba(55, 123, 168, 0.5);  /* Light shadow on focus */
+}
+
+/* Horizontal Rule */
+hr {
+  border: none;
+  border-top: 1px solid lightgray;
+  margin: 2rem 0;
+}
+
+/* List Styling */
+ul {
+  padding: 0;
+  list-style: none;
+  margin: 0;
+}
+
+li {
+  padding: 1rem;
+  background-color: white;
+  margin-bottom: 1rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 1rem;
+}
+
+/* Button Inside List Items */
+li button {
+  background: #377ba8;
+  color: white;
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.2s ease-in-out;
+}
+
+li button:hover {
+  background: #275a80;
+}
+
+/* Responsive Form Styling */
+.content form {
+  margin-top: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.content label {
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+}
+
+.content input, .content textarea {
+  padding: 0.75rem;
+  border-radius: 8px;
+  border: 1px solid lightgray;
+}
+
+.content input:focus, .content textarea:focus {
+  outline: none;
+  border-color: #377ba8;
+  box-shadow: 0 0 5px rgba(55, 123, 168, 0.5);
+}

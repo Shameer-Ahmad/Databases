@@ -13,7 +13,7 @@ def init_db():
     conn.close()
     print("Database initialized from schema.sql.")
 
-#init_db()
+init_db()
 
 app = create_app()
 
