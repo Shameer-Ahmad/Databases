@@ -49,7 +49,7 @@ CREATE TABLE review (
     FOREIGN KEY (user_id) REFERENCES customer(username),
     FOREIGN KEY (restaurant_id) REFERENCES restaurant(restaurant_id)
 );
-=======
+
 CREATE TABLE event (
     event_ID INTEGER PRIMARY KEY,
     event_name TEXT,
