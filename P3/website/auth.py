@@ -9,9 +9,21 @@ def landing_page():
     restaurants = conn.execute("SELECT restaurant_name, street_number, street_name, city, state, zip_code, cuisine_type FROM restaurant").fetchall()
     conn.close()
 
-    # Render the landing page with the list of restaurants
-    return render_template("landing.html", restaurants=restaurants)
-                           
+    # Get the user_id from the session
+    user_id = session.get('user_id')
+
+    # Fetch user information
+    user = None
+    if user_id:
+        conn = get_db_connection()
+        cursor = conn.cursor()
+        cursor.execute("SELECT * FROM user WHERE user_id = ?", (user_id,))
+        user = cursor.fetchone()
+        conn.close()
+
+    # Render the landing page with the list of restaurants and user
+    return render_template("landing.html", restaurants=restaurants, user=user)
+                
 @auth.route("/login", methods=["GET", "POST"])
 def login():
     if request.method == "POST":
@@ -86,4 +98,4 @@ def logout():
         session.pop('user_id', None)
 
     # Redirect to home or login page (adjust as needed)
-    return redirect(url_for('auth.register'))
+    return redirect(url_for('auth.landing_page'))

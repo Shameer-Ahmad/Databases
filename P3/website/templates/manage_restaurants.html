@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<h2>Manage Your Restaurants</h2>
+
+<!-- Add Restaurant Button -->
+<div class="manage-bar">
+    <a href="{{ url_for('restaurants.create_restaurant_form') }}" class="manage-button">Add Restaurant</a>
+</div>
+
+<div class="manage-restaurants-list">
+    {% if restaurants %}
+        <ul>
+            {% for restaurant in restaurants %}
+            <li>
+                <strong>{{ restaurant['restaurant_name'] }}</strong>
+                <div style="margin-bottom: 0.2rem;">
+                    {{ restaurant['street_number'] }} {{ restaurant['street_name'] }}, 
+                    {{ restaurant['city'] }}, {{ restaurant['state'] }} {{ restaurant['zip_code'] }}
+                </div>
+                <div style="font-style: italic; color: gray; margin-top: 0.1rem;">
+                    {{ restaurant['cuisine_type'] }}
+                </div>
+                <div class="action-buttons">
+                    <a href="{{ url_for('restaurants.edit_restaurant', id=restaurant['restaurant_id']) }}" 
+                       class="edit-button" 
+                       style="background-color: #28a745; color: #fff; padding: 0.5rem 1rem; border-radius: 8px; min-width: 100px; text-align: center;">
+                        Edit
+                    </a>
+                    
+                    <form action="{{ url_for('restaurants.delete_restaurant', id=restaurant['restaurant_id']) }}" method="POST" style="display: inline;">
+                        <button type="submit" class="delete-button" 
+                                style="background-color: #dc3545; color: #fff; padding: 0.5rem 1rem; border: none; border-radius: 8px; min-width: 100px;">
+                            Delete
+                        </button>
+                    </form>
+                </div>
+            </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>No restaurants owned by you.</p>
+    {% endif %}
+</div>
+
+{% endblock %}

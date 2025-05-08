@@ -15,6 +15,7 @@ DROP TABLE IF EXISTS restaurant;
 
 CREATE TABLE restaurant (
     restaurant_id INTEGER PRIMARY KEY,
+    user_id INTEGER NOT NULL,
     restaurant_name TEXT NOT NULL,
     street_number TEXT NOT NULL,
     street_name TEXT NOT NULL,
@@ -24,6 +25,7 @@ CREATE TABLE restaurant (
     zip_code TEXT NOT NULL,
     cuisine_type TEXT,
     FOREIGN KEY (zip_code) REFERENCES neighborhood_zip(zip_code)
+    FOREIGN KEY (user_id) REFERENCES user(user_id) ON DELETE CASCADE
 );
 
 DROP TABLE IF EXISTS restaurant_phone;

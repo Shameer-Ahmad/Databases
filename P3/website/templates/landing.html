@@ -2,7 +2,16 @@
 
 {% block content %}
 
+<!-- Manage Button Bar -->
+{% if user and user['role'] == 'owner' %}
+    <div class="manage-bar">
+        <a href="{{ url_for('restaurants.manage_restaurants') }}" class="manage-button">Manage Restaurants</a>
+    </div>
+{% endif %}
+
 <div class="restaurant-list">
+    <p>Your Role: {{ user['role'] if user else 'Not Logged In' }}</p>
+    
     {% if restaurants %}
         <ul>
             {% for restaurant in restaurants %}
