@@ -15,17 +15,21 @@
         <ul>
             {% for restaurant in restaurants %}
             <li>
-                <strong>{{ restaurant['restaurant_name'] }}</strong>
+                <a href="{{ url_for('restaurants.restaurant_detail', id=restaurant['restaurant_id']) }}" 
+                   style="font-weight: bold; text-decoration: none; color: #377ba8;">
+                    {{ restaurant['restaurant_name'] }}
+                </a>
                 <div style="margin-bottom: 0.2rem;">
                     {{ restaurant['street_number'] }} {{ restaurant['street_name'] }}, 
-                    {{ restaurant['city'] }}, {{ restaurant['state'] }} {{ restaurant['zip_code'] }}
+                    {{ restaurant['city'] }}
                 </div>
                 <div style="font-style: italic; color: gray; margin-top: 0.1rem;">
                     {{ restaurant['cuisine_type'] }}
                 </div>
+
                 {% if user and user['is_logged'] and user['role'] == 'customer' %}
                 <!-- Toggle button -->
-                <button type="button" onclick="toggleReviewForm('{{ loop.index0 }}') " id="review-button-{{ loop.index0 }}">Leave a Review</button>
+                <button type="button" onclick="toggleReviewForm('{{ loop.index0 }}')" id="review-button-{{ loop.index0 }}">Leave a Review</button>
             
                 <!-- Review Form -->
                 <div id="review-form-{{ loop.index0 }}" style="display: none; margin-top: 10px;">

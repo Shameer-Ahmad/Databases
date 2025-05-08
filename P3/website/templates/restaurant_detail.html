@@ -17,10 +17,12 @@
             Home
         </a>
 
-        <a href="{{ url_for('restaurants.manage_restaurants') }}" 
-           style="background-color: #377ba8; color: #fff; padding: 0.5rem 1rem; border-radius: 8px; text-decoration: none;">
-            Manage Restaurants
-        </a>
+        {% if user and user['role'] == 'owner' %}
+            <a href="{{ url_for('restaurants.manage_restaurants') }}" 
+            style="background-color: #377ba8; color: #fff; padding: 0.5rem 1rem; border-radius: 8px; text-decoration: none;">
+                Manage Restaurants
+            </a>
+        {% endif %}
     </div>
 
     <div>
@@ -41,18 +43,19 @@
     </div>
 </div>
 
-<!-- Header Section with "Add Event" Button -->
+<!-- Header Section with "Add Event" Button (Only for Owners) -->
 <div style="display: flex; justify-content: space-between; align-items: center; padding: 0 1rem; margin-bottom: 1rem;">
     <h2 style="text-align: left; color: #000;">Events for {{ restaurant['restaurant_name'] }}</h2>
     
+    {% if user and user['role'] == 'owner' and user['user_id'] == restaurant['user_id'] %}
     <a href="{{ url_for('events.create_event', restaurant_id=restaurant['restaurant_id']) }}" 
         style="background-color: #28a745; color: #fff; padding: 0.5rem 1rem; border-radius: 8px; text-decoration: none;">
         Add Event
     </a>
-
+    {% endif %}
 </div>
 
-<!-- Events Section -->
+<!-- Events Section (Visible to Everyone) -->
 <div class="manage-restaurants-list">
     {% if events %}
         <ul style="list-style-type: none; padding: 0; margin: 0;">
@@ -64,36 +67,19 @@
                     <div style="font-size: 0.9rem; color: gray;">Capacity: {{ event['capacity'] }}</div>
                 </div>
 
-                <!-- Delete Button -->
+                <!-- Delete Button (Only for Owners) -->
+                {% if user and user['role'] == 'owner' and user['user_id'] == restaurant['user_id'] %}
                 <form action="{{ url_for('events.delete_event', event_id=event['event_ID']) }}" method="POST" style="margin-left: auto;">
                     <button type="submit" style="background-color: #dc3545; color: #fff; padding: 0.5rem 1rem; border: none; border-radius: 8px; cursor: pointer;">
                         Delete
                     </button>
                 </form>
+                {% endif %}
             </li>
             {% endfor %}
         </ul>
     {% else %}
         <p style="text-align: left; color: #000; margin-left: 1rem;">No events for this restaurant.</p>
-    {% endif %}
-</div>
-
-<!-- Reviews Section -->
-<h2 style="text-align: left; color: #000; margin: 2rem 0 1rem 1rem;">Reviews</h2>
-<div class="manage-restaurants-list">
-    {% if reviews %}
-        <ul style="list-style-type: none; padding: 0; margin: 0;">
-            {% for review in reviews %}
-            <li style="background-color: #f9f9f9; padding: 0.8rem 1rem; border-radius: 8px; margin-bottom: 0.8rem; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); text-align: left;">
-                <div style="font-weight: bold;">{{ review['user_name'] }}</div>
-                <div style="font-size: 0.9rem; color: gray;">{{ review['date_time'] }}</div>
-                <div style="font-size: 0.9rem;">Rating: {{ review['rating'] }}/5</div>
-                <div style="margin-top: 0.5rem;">{{ review['text'] }}</div>
-            </li>
-            {% endfor %}
-        </ul>
-    {% else %}
-        <p style="text-align: left; color: #000; margin-left: 1rem;">No reviews for this restaurant.</p>
     {% endif %}
 </div>
 

@@ -5,14 +5,14 @@ auth = Blueprint("auth", __name__)
 
 @auth.route("/", methods=["GET"])
 def landing_page():
+    # Fetch all restaurants from the database
     conn = get_db_connection()
-    restaurants = conn.execute("SELECT restaurant_name, street_number, street_name, city, state, zip_code, cuisine_type FROM restaurant").fetchall()
+    restaurants = conn.execute("""
+        SELECT restaurant_id, restaurant_name, street_number, street_name, city, state, zip_code, cuisine_type 
+        FROM restaurant
+    """).fetchall()
     conn.close()
-
-    # Get the user_id from the session
     user_id = session.get('user_id')
-
-    # Fetch user information
     user = None
     if user_id:
         conn = get_db_connection()
@@ -21,9 +21,10 @@ def landing_page():
         user = cursor.fetchone()
         conn.close()
 
-    # Render the landing page with the list of restaurants and user
-    return render_template("landing.html", restaurants=restaurants, user=user)
-                
+
+    # Render the landing page with the list of restaurants
+    return render_template("landing.html", restaurants=restaurants, user = user)
+          
 @auth.route("/login", methods=["GET", "POST"])
 def login():
     if request.method == "POST":
