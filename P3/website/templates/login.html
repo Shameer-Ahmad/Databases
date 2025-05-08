@@ -1,21 +1,28 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Login</title>
-</head>
-<body>
-    <form method="GET" action="{{ url_for('auth.logout') }}">
-        <button type="submit">Logout</button>
-    </form>
-    <h2>Login</h2>
-    <form method="POST" action="{{ url_for('auth.login') }}">
-        <label for="username">Username:</label>
-        <input type="text" name="username" id="username" required><br><br>
+{% extends 'base.html' %}
 
-        <label for="password">Password:</label>
-        <input type="password" name="password" id="password" required><br><br>
+{% block title %}Login{% endblock %}
 
-        <button type="submit">Login</button>
+
+{% block banner %}
+  <div class="banner">
+    <h1>Aviram’s Diners</h1>
+  </div>
+{% endblock %}
+
+
+
+{% block content %}
+    <h2 class="mb-4">Login</h2>
+    <form method="POST" action="{{ url_for('auth.login') }}" >
+        <div class="mb-3">
+            <label for="username">Username:</label>
+            <input type="text" name="username" id="username" required>
+        </div>
+
+        <div class="mb-3">
+            <label for="password" class="form-label">Password</label>
+            <input type="text" name="password" id="password" required>
+        </div>
+        <button type="submit" class="button">Login</button>
     </form>
-</body>
-</html>
+{% endblock %}
