@@ -2,7 +2,7 @@
 <html>
 <head>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-    <title>Events - Aviram's Diners</title>
+    <title>Edit Restaurant - Aviram's Diners</title>
 </head>
 <body>
 
@@ -33,43 +33,57 @@
     </div>
 </div>
 
+
 <!-- Content Section -->
 <div class="content" style="max-width: 600px; margin: 2rem auto; background-color: #f9f9f9; padding: 1rem; border-radius: 8px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);">
-    <h2 style="text-align: center;">Upcoming Events</h2>
+    <h2 style="text-align: center;">Edit Restaurant</h2>
 
-    <!-- Display the list of events -->
-    <ul id="events-list">
-        {% for ev in events %}
-            <li class="event-item">
-                <strong>{{ ev.event_name }}</strong>  {{ ev.formatted_date }} 
-                <em>{{ ev.capacity }} Occupancy</em>
-                <form method="POST" action="{{ url_for('events.delete_event', event_id=ev.event_ID) }}" style="display:inline;">
-                    <input type="hidden" name="_method" value="DELETE">
-                    <button class="btn btn-blue" type="submit">Delete</button>
-                </form>
-            </li>
-        {% else %}
-            <li><em>No Events Scheduled.</em></li>
-        {% endfor %}
-    </ul>
+    <form id="edit-restaurant-form" method="POST" action="{{ url_for('restaurants.edit_restaurant', id=restaurant['restaurant_id']) }}">
+        <div class="form-group" style="margin-bottom: 1rem;">
+            <label for="restaurant_name">Restaurant Name</label>
+            <input name="restaurant_name" id="restaurant_name" type="text" value="{{ restaurant['restaurant_name'] }}" required style="width: 100%; padding: 0.5rem; border-radius: 8px; border: 1px solid #ccc;">
+        </div>
 
-    <!-- Form to create a new event -->
-    <form id="add-event" method="post" action="{{ url_for('events.create_event') }}">
-        <div class="form-group">
-            <label for="event_name">Event Name</label>
-            <input name="event_name" id="event_name" type="text" placeholder="Event Name" required>
+        <div class="form-group" style="display: flex; gap: 1rem; margin-bottom: 1rem;">
+            <div class="street-number" style="flex: 1;">
+                <label for="street_number">Street Number</label>
+                <input name="street_number" id="street_number" type="text" value="{{ restaurant['street_number'] }}" required style="width: 100%; padding: 0.5rem; border-radius: 8px; border: 1px solid #ccc;">
+            </div>
+
+            <div class="street-name" style="flex: 2;">
+                <label for="street_name">Street Name</label>
+                <input name="street_name" id="street_name" type="text" value="{{ restaurant['street_name'] }}" required style="width: 100%; padding: 0.5rem; border-radius: 8px; border: 1px solid #ccc;">
+            </div>
         </div>
-        <div class="form-group">
-            <label for="date_time">Event Date and Time</label>
-            <input name="date_time" id="date_time" type="datetime-local" required>
+
+        <div class="form-group" style="margin-bottom: 1rem;">
+            <label for="apt_number">Apt Number (optional)</label>
+            <input name="apt_number" id="apt_number" type="text" value="{{ restaurant['apt_number'] or '' }}" style="width: 100%; padding: 0.5rem; border-radius: 8px; border: 1px solid #ccc;">
         </div>
-        <div class="form-group">
-            <label for="capacity">Event Capacity</label>
-            <input name="capacity" id="capacity" type="number" placeholder="Capacity" min="1" required>
+
+        <div class="form-group" style="margin-bottom: 1rem;">
+            <label for="city">Neighborhood</label>
+            <input name="city" id="Neighborhood" type="text" value="{{ restaurant['city'] }}" required style="width: 100%; padding: 0.5rem; border-radius: 8px; border: 1px solid #ccc;">
         </div>
+
+        <div class="form-group" style="margin-bottom: 1rem;">
+            <label for="state">State</label>
+            <input name="state" id="state" type="text" value="{{ restaurant['state'] }}" required style="width: 100%; padding: 0.5rem; border-radius: 8px; border: 1px solid #ccc;">
+        </div>
+
+        <div class="form-group" style="margin-bottom: 1rem;">
+            <label for="zip_code">Zip Code</label>
+            <input name="zip_code" id="zip_code" type="text" value="{{ restaurant['zip_code'] }}" required style="width: 100%; padding: 0.5rem; border-radius: 8px; border: 1px solid #ccc;">
+        </div>
+
+        <div class="form-group" style="margin-bottom: 1rem;">
+            <label for="cuisine_type">Cuisine Type</label>
+            <input name="cuisine_type" id="cuisine_type" type="text" value="{{ restaurant['cuisine_type'] }}" required style="width: 100%; padding: 0.5rem; border-radius: 8px; border: 1px solid #ccc;">
+        </div>
+
         <div style="text-align: center;">
-            <button class="btn btn-blue" type="submit" style="background-color: #377ba8; color: #fff; padding: 0.75rem 1.5rem; border: none; border-radius: 8px; cursor: pointer;">
-                Add Event
+            <button type="submit" class="btn btn-blue" style="background-color: #377ba8; color: #fff; padding: 0.75rem 1.5rem; border: none; border-radius: 8px; cursor: pointer;">
+                Update Restaurant
             </button>
         </div>
     </form>

@@ -1,6 +1,7 @@
 
 from flask import Blueprint, session, request, jsonify, render_template, redirect, url_for
 from website.db import get_db_connection
+from datetime import datetime
 
 
 restaurants = Blueprint("restaurants", __name__)
@@ -73,11 +74,30 @@ def restaurant_detail(id):
         """, (id,)
     ).fetchall()
 
-    # Map RSVP counts to event IDs for quick lookup
     rsvp_dict = {rsvp["event_ID"]: rsvp["rsvp_count"] for rsvp in rsvp_counts}
 
-    cursor.close()
-    conn.close()
+    # Fetch reviews for the restaurant
+    reviews = cursor.execute("""
+        SELECT r.text, r.score, r.date_time, u.username 
+        FROM review r
+        JOIN user u ON r.user_id = u.user_id
+        WHERE r.restaurant_id = ?
+        ORDER BY r.date_time DESC
+    """, (id,)).fetchall()
+
+    # Format review dates
+    reviews_list = []
+    for review in reviews:
+        date_obj = datetime.strptime(review["date_time"], "%Y-%m-%d %H:%M:%S.%f")
+        day = date_obj.day
+        suffix = 'th' if 10 <= day <= 20 else {1: 'st', 2: 'nd', 3: 'rd'}.get(day % 10, 'th')
+        formatted_date = date_obj.strftime(f"%B {day}{suffix}, %Y")
+        reviews_list.append({
+            "username": review["username"],
+            "text": review["text"],
+            "score": review["score"],
+            "formatted_date": formatted_date
+        })
 
     # Construct the events list with RSVP counts included
     events_list = [
@@ -91,8 +111,10 @@ def restaurant_detail(id):
         for event in events
     ]
 
-    return render_template("restaurant_detail.html", restaurant=restaurant, events=events_list)
+    cursor.close()
+    conn.close()
 
+    return render_template("restaurant_detail.html", restaurant=restaurant, events=events_list, reviews=reviews_list)
 @restaurants.route("/create", methods=["GET"])
 def create_restaurant_form():
     # Check if user is logged in

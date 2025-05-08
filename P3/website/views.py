@@ -7,7 +7,10 @@ views = Blueprint("views", __name__)
 def home():
     # Fetch all restaurants from the database
     conn = get_db_connection()
-    restaurants = conn.execute("SELECT restaurant_name, street_number, street_name, city, state, zip_code, cuisine_type FROM restaurant").fetchall()
+    restaurants = conn.execute("""
+        SELECT restaurant_id, restaurant_name, street_number, street_name, city, state, zip_code, cuisine_type 
+        FROM restaurant
+    """).fetchall()
     conn.close()
     user_id = session.get('user_id')
     user = None
