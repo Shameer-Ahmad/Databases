@@ -1,6 +1,10 @@
 DROP TABLE IF EXISTS user;
 DROP TABLE IF EXISTS rsvp;
 DROP TABLE IF EXISTS event;
+DROP TABLE IF EXISTS restaurant;
+DROP TABLE IF EXISTS restaurant_phone;
+DROP TABLE IF EXISTS review;
+DROP TABLE IF EXISTS neighborhood_zip;
 
 CREATE TABLE IF NOT EXISTS user (
     user_id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -9,8 +13,6 @@ CREATE TABLE IF NOT EXISTS user (
     role TEXT CHECK(role IN ('customer', 'owner')) NOT NULL,
     is_logged BOOLEAN NOT NULL DEFAULT 0
 );
-
-DROP TABLE IF EXISTS restaurant;
 
 CREATE TABLE restaurant (
     restaurant_id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -25,8 +27,6 @@ CREATE TABLE restaurant (
     FOREIGN KEY (zip_code) REFERENCES neighborhood_zip(zip_code)
 );
 
-DROP TABLE IF EXISTS restaurant_phone;
-
 CREATE TABLE restaurant_phone (
     restaurant_id INTEGER,
     phone_number TEXT,
@@ -34,8 +34,6 @@ CREATE TABLE restaurant_phone (
     FOREIGN KEY (restaurant_id) REFERENCES restaurant(restaurant_id),
     CHECK (phone_number LIKE '___-___-____')
 );
-
-DROP TABLE IF EXISTS review;
 
 CREATE TABLE review (
     user_id TEXT,
@@ -62,8 +60,6 @@ CREATE TABLE rsvp (
     FOREIGN KEY (user_ID)  REFERENCES user(id),
     FOREIGN KEY (event_ID) REFERENCES event(event_ID)
 );
-
-DROP TABLE IF EXISTS neighborhood_zip;
 
 CREATE TABLE neighborhood_zip (
     neighborhood_name TEXT,
