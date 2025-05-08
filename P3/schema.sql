@@ -10,11 +10,10 @@ CREATE TABLE IF NOT EXISTS user (
     is_logged BOOLEAN NOT NULL DEFAULT 0
 );
 
-
 DROP TABLE IF EXISTS restaurant;
 
 CREATE TABLE restaurant (
-    restaurant_id INTEGER PRIMARY KEY,
+    restaurant_id INTEGER PRIMARY KEY AUTOINCREMENT,
     restaurant_name TEXT NOT NULL,
     street_number TEXT NOT NULL,
     street_name TEXT NOT NULL,
@@ -36,7 +35,6 @@ CREATE TABLE restaurant_phone (
     CHECK (phone_number LIKE '___-___-____')
 );
 
-
 DROP TABLE IF EXISTS review;
 
 CREATE TABLE review (
@@ -49,14 +47,13 @@ CREATE TABLE review (
     FOREIGN KEY (user_id) REFERENCES customer(username),
     FOREIGN KEY (restaurant_id) REFERENCES restaurant(restaurant_id)
 );
-=======
+
 CREATE TABLE event (
     event_ID INTEGER PRIMARY KEY,
     event_name TEXT,
     date_time DATETIME,
     capacity INTEGER CHECK (capacity > 0)
 );
-
 
 CREATE TABLE rsvp (
     user_ID  INTEGER NOT NULL,
@@ -66,5 +63,11 @@ CREATE TABLE rsvp (
     FOREIGN KEY (event_ID) REFERENCES event(event_ID)
 );
 
+DROP TABLE IF EXISTS neighborhood_zip;
 
-
+CREATE TABLE neighborhood_zip (
+    neighborhood_name TEXT,
+    zip_code TEXT NOT NULL,
+    PRIMARY KEY (neighborhood_name, zip_code),
+    FOREIGN KEY (neighborhood_name) REFERENCES neighborhood(neighborhood_name)
+);
