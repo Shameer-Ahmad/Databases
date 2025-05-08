@@ -17,7 +17,7 @@
             Home
         </a>
 
-        <a href="{{ url_for('restaurants.create_restaurant_form') }}" 
+        <a href="{{ url_for('restaurants.create_restaurant') }}" 
            style="background-color: #377ba8; color: #fff; padding: 0.5rem 1rem; border-radius: 8px; text-decoration: none;">
             Add Restaurant
         </a>
@@ -55,10 +55,13 @@
                         {{ restaurant['restaurant_name'] }}
                     </a>
                     
+                    <!-- Address and Neighborhood -->
                     <div style="margin-bottom: 0.2rem;">
-                        {{ restaurant['street_number'] }} {{ restaurant['street_name'] }}, 
-                        {{ restaurant['city'] }}, {{ restaurant['state'] }} {{ restaurant['zip_code'] }}
+                        {{ restaurant['street_number'] }} {{ restaurant['street_name'] }},
+                        {{ restaurant['neighborhood'] }}, {{ restaurant['city'] }}, {{ restaurant['zip_code'] }}
                     </div>
+                    
+                    <!-- Cuisine Type -->
                     <div style="font-style: italic; color: gray; margin-top: 0.1rem;">
                         {{ restaurant['cuisine_type'] }}
                     </div>
