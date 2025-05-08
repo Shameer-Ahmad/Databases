@@ -39,5 +39,12 @@
     {% block content %}{% endblock %}
 </div>
 
+<script>
+    function toggleReviewForm(index) {
+        const form = document.getElementById(`review-form-${index}`);
+        form.style.display = form.style.display === 'none' ? 'block' : 'none';
+        
+    }
+</script>
 </body>
 </html>
