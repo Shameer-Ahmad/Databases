@@ -1,47 +1,83 @@
-{% extends 'base.html' %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Restaurants</title>
+    <link href="{{ url_for('static', filename='style.css') }}" rel="stylesheet">
+</head>
+<body>
 
-{% block content %}
+<!-- Navigation Bar -->
+<div class="manage-bar" style="background-color: #377ba8; padding: 1rem; display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; border-radius: 8px;">
+    <div>
+        <a href="{{ url_for('views.home') }}" 
+           style="background-color: #275a80; color: #fff; padding: 0.5rem 1rem; border-radius: 8px; text-decoration: none; margin-right: 0.5rem;">
+            Home
+        </a>
+
+        <a href="{{ url_for('restaurants.create_restaurant_form') }}" 
+           style="background-color: #377ba8; color: #fff; padding: 0.5rem 1rem; border-radius: 8px; text-decoration: none;">
+            Add Restaurant
+        </a>
+    </div>
+
+    <div>
+        {% if session.get('user_id') %}
+            <form action="{{ url_for('auth.logout') }}" method="GET" class="logout-form" style="display: inline;">
+                <button type="submit" class="auth-button" style="background-color: #275a80; color: #fff; padding: 0.5rem 1rem; border: none; border-radius: 8px; cursor: pointer;">
+                    Logout
+                </button>
+            </form>
+        {% else %}
+            <a href="{{ url_for('auth.login') }}" class="auth-button" style="background-color: #275a80; color: #fff; padding: 0.5rem 1rem; border-radius: 8px; text-decoration: none; margin-right: 0.5rem;">
+                Login
+            </a>
+            <a href="{{ url_for('auth.register') }}" class="auth-button" style="background-color: #275a80; color: #fff; padding: 0.5rem 1rem; border-radius: 8px; text-decoration: none;">
+                Register
+            </a>
+        {% endif %}
+    </div>
+</div>
 
 <h2>Manage Your Restaurants</h2>
 
-<!-- Add Restaurant Button -->
-<div class="manage-bar">
-    <a href="{{ url_for('restaurants.create_restaurant_form') }}" class="manage-button">Add Restaurant</a>
-</div>
-
 <div class="manage-restaurants-list">
     {% if restaurants %}
-        <ul>
+        <ul style="list-style-type: none; padding: 0;">
             {% for restaurant in restaurants %}
-            <li>
-                <strong>{{ restaurant['restaurant_name'] }}</strong>
-                <div style="margin-bottom: 0.2rem;">
-                    {{ restaurant['street_number'] }} {{ restaurant['street_name'] }}, 
-                    {{ restaurant['city'] }}, {{ restaurant['state'] }} {{ restaurant['zip_code'] }}
-                </div>
-                <div style="font-style: italic; color: gray; margin-top: 0.1rem;">
-                    {{ restaurant['cuisine_type'] }}
-                </div>
-                <div class="action-buttons">
+            <li style="background-color: #f9f9f9; padding: 1rem; border-radius: 8px; margin-bottom: 1rem; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); display: flex; justify-content: space-between; align-items: center;">
+                <div>
+                    <!-- Restaurant Name as Clickable Link -->
+                    <a href="{{ url_for('restaurants.restaurant_detail', id=restaurant['restaurant_id']) }}" 
+                       style="font-weight: bold; color: #377ba8; text-decoration: none;">
+                        {{ restaurant['restaurant_name'] }}
+                    </a>
                     
-                    <!-- Edit Button - GET Request -->
+                    <div style="margin-bottom: 0.2rem;">
+                        {{ restaurant['street_number'] }} {{ restaurant['street_name'] }}, 
+                        {{ restaurant['city'] }}, {{ restaurant['state'] }} {{ restaurant['zip_code'] }}
+                    </div>
+                    <div style="font-style: italic; color: gray; margin-top: 0.1rem;">
+                        {{ restaurant['cuisine_type'] }}
+                    </div>
+                </div>
+                
+                <div class="action-buttons" style="display: flex; gap: 0.5rem;">
+                    <!-- Edit Button -->
                     <a href="{{ url_for('restaurants.edit_restaurant', id=restaurant['restaurant_id']) }}" 
-                        class="edit-button" 
-                        style="background-color: #28a745; color: #fff; padding: 0.5rem 1rem; border: none; border-radius: 8px; min-width: 100px; display: inline-block; text-align: center;">
+                       style="background-color: #28a745; color: #fff; padding: 0.5rem 1rem; border: none; border-radius: 8px; min-width: 100px; text-align: center; text-decoration: none;">
                         Edit
                     </a>
 
-
-                    
-                    
-                    <!-- Delete Button - POST Request -->
+                    <!-- Delete Button -->
                     <form action="{{ url_for('restaurants.delete_restaurant', id=restaurant['restaurant_id']) }}" method="POST" style="display: inline;">
-                        <button type="submit" class="delete-button" 
+                        <button type="submit" 
                                 style="background-color: #dc3545; color: #fff; padding: 0.5rem 1rem; border: none; border-radius: 8px; min-width: 100px;">
                             Delete
                         </button>
                     </form>
-
                 </div>
             </li>
             {% endfor %}
@@ -51,4 +87,5 @@
     {% endif %}
 </div>
 
-{% endblock %}
+</body>
+</html>

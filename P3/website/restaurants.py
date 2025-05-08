@@ -42,15 +42,19 @@ def all_restaurants():
 @restaurants.route("/<int:id>", methods=["GET"])
 def restaurant_detail(id):
     conn = get_db_connection()
+    cursor = conn.cursor()
 
-    restaurant = conn.execute("SELECT * FROM restaurant WHERE restaurant_id = ?", (id,)).fetchone()
+    # Fetch the restaurant data
+    cursor.execute("SELECT restaurant_name FROM restaurant WHERE restaurant_id = ?", (id,))
+    restaurant = cursor.fetchone()
 
+    cursor.close()
     conn.close()
 
-    if restaurant is None:
-        return jsonify({"error": "Restaurant not found"}), 404
+    if not restaurant:
+        return "Restaurant not found", 404
 
-    return jsonify(dict(restaurant))
+    return render_template("restaurant_detail.html", restaurant=restaurant)
 
 @restaurants.route("/create", methods=["GET"])
 def create_restaurant_form():
@@ -95,34 +99,6 @@ def create_restaurant():
     conn.close()
 
     return redirect(url_for("restaurants.manage_restaurants"))
-
-# Updates a restaurant using restaurant_id
-@restaurants.route("/<int:id>", methods=["PUT"])
-def update_restaurant(id):
-    data = request.get_json()
-    conn = get_db_connection()
-    cur = conn.cursor()
-
-    cur.execute("""
-        UPDATE restaurant 
-        SET restaurant_name = ?, street_number = ?, street_name = ?, apt_number = ?, city = ?, state = ?, zip_code = ?, cuisine_type = ? 
-        WHERE restaurant_id = ?
-    """, (
-        data.get("restaurant_name"), 
-        data.get("street_number"),
-        data.get("street_name"),
-        data.get("apt_number"),
-        data.get("city"),
-        data.get("state"),
-        data.get("zip_code"),
-        data.get("cuisine_type"),
-        id
-    ))
-
-    conn.commit()
-    conn.close()
-
-    return jsonify({"message": "Restaurant updated successfully!"})
 
 # Deletes a restaurant using restaurant_id
 @restaurants.route("/<int:id>", methods=["POST"])
