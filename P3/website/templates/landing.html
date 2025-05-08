@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="restaurant-list">
+    {% if restaurants %}
+        <ul>
+            {% for restaurant in restaurants %}
+            <li>
+                <strong>{{ restaurant['restaurant_name'] }}</strong>
+                <div style="margin-bottom: 0.2rem;">
+                    {{ restaurant['street_number'] }} {{ restaurant['street_name'] }}, 
+                    {{ restaurant['city'] }}, {{ restaurant['state'] }} {{ restaurant['zip_code'] }}
+                </div>
+                <div style="font-style: italic; color: gray; margin-top: 0.1rem;">
+                    {{ restaurant['cuisine_type'] }}
+                </div>
+            </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>No restaurants available.</p>
+    {% endif %}
+</div>
+
+{% endblock %}

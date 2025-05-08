@@ -10,10 +10,10 @@ body {
 .container {
   max-width: 600px;
   margin: auto;
-  background: #377ba8;  /* Primary color */
+  background: #377ba8;
   padding: 2rem;
   border-radius: 8px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);  /* Increased shadow for more depth */
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
 /* Heading Styling */
@@ -42,7 +42,6 @@ body {
   font-size: 1.1rem;
   cursor: pointer;
   transition: background-color 0.3s ease-in-out;
-  display: inline-block;
   text-align: center;
   margin-top: 1.5rem;
 }
@@ -64,8 +63,8 @@ input[type="text"], input[type="number"], input[type="datetime-local"] {
 
 input[type="text"]:focus, input[type="number"]:focus, input[type="datetime-local"]:focus {
   outline: none;
-  border-color: #377ba8; /* Primary color focus */
-  box-shadow: 0 0 5px rgba(55, 123, 168, 0.5);  /* Light shadow on focus */
+  border-color: #377ba8;
+  box-shadow: 0 0 5px rgba(55, 123, 168, 0.5);
 }
 
 /* Horizontal Rule */
@@ -94,7 +93,6 @@ li {
   font-size: 1rem;
 }
 
-/* Button Inside List Items */
 li button {
   background: #377ba8;
   color: white;
@@ -107,6 +105,16 @@ li button {
 
 li button:hover {
   background: #275a80;
+}
+
+li strong {
+  font-size: 1.1rem;
+  margin-bottom: 0.3rem; /* Adjusted space */
+}
+
+li em {
+  color: gray;
+  margin-top: 0.2rem; /* Reduced space */
 }
 
 /* Responsive Form Styling */
@@ -134,66 +142,77 @@ li button:hover {
   box-shadow: 0 0 5px rgba(55, 123, 168, 0.5);
 }
 
-/* Banner Section */
 .banner {
-  background-color: #377ba8;  /* Your primary color */
+  background-color: #377ba8;
   color: white;
-  text-align: left;  /* Align the text to the left */
-  padding: 1rem 1rem;  /* Adjust padding for smaller text */
-  font-size: 1rem;  /* Reduced font size for better display */
-  font-family: 'Arial', sans-serif;
-  text-transform: uppercase;
-  letter-spacing: 1px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-  margin-bottom: 2rem; /* Space between banner and content */
+  padding: 1rem;
   display: flex;
-  justify-content: space-between; /* Aligns the content to the left and right */
-  align-items: center;  /* Vertically centers the content */
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
-/* Align the title to the left */
 .banner h1 {
   margin: 0;
-  padding-left: 1px;  /* Add some space from the left edge */
-  font-size: 1.8rem;  /* Slightly smaller title size */
+  padding-right: 1rem;
+  font-size: 1.8rem;
+  white-space: nowrap;
 }
 
-/* Search Form Styling */
+.search-auth-container {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  width: 100%;
+}
+
 .search-form {
   display: flex;
-  justify-content: center;
-  margin: .5rem 0;
-  width: 80%;
-}
-
-.search-bar-container {
-  display: flex;
-  gap: 1rem;
-  justify-content: center;
-  max-width: 900px;
-  width: 100%;
+  gap: 0.5rem;
+  flex-grow: 1;
 }
 
 .search-bar {
-  width: 100%;
-  max-width: 250px;
   padding: 0.5rem;
+  border-radius: 5px;
   border: 1px solid #ccc;
-  border-radius: 4px;
-  font-size: 1rem;
+  width: 150px;
 }
 
 .search-button {
-  background-color: #377ba8;
+  background-color: #275a80;
   color: white;
-  padding: 0.5rem 1rem;
   border: none;
-  border-radius: 4px;
+  padding: 0.5rem 1rem;
   cursor: pointer;
+  border-radius: 5px;
 }
 
 .search-button:hover {
+  background-color: #1f4868;
+}
+
+.auth-buttons {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.auth-button {
   background-color: #275a80;
+  color: white;
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+}
+
+.auth-button:hover {
+  background-color: #1f4868;
 }
 
 /* Restaurant List Styling */
