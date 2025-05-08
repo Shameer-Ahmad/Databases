@@ -58,9 +58,13 @@ def restaurant_detail(id):
     cursor = conn.cursor()
 
     # Fetch restaurant details
-    restaurant = cursor.execute(
-        "SELECT * FROM restaurant WHERE restaurant_id = ?", (id,)
-    ).fetchone()
+    cursor.execute("""
+        SELECT r.*, nz.neighborhood 
+        FROM restaurant r 
+        LEFT JOIN neighborhood_zip nz ON r.zip_code = nz.zip_code 
+        WHERE r.restaurant_id = ?
+    """, (id,))
+    restaurant = cursor.fetchone()
 
     if not restaurant:
         cursor.close()
@@ -68,34 +72,34 @@ def restaurant_detail(id):
         return "Restaurant not found", 404
 
     # Fetch events associated with the restaurant
-    events = cursor.execute(
-        """
+    cursor.execute("""
         SELECT event_ID, event_name, date_time, capacity 
         FROM event 
         WHERE restaurant_id = ?
-        """, (id,)
-    ).fetchall()
+    """, (id,))
+    events = cursor.fetchall()
 
     # Fetch RSVPs for the events
-    rsvp_counts = cursor.execute(
-        """
+    cursor.execute("""
         SELECT event_ID, COUNT(user_ID) AS rsvp_count 
         FROM rsvp 
         WHERE event_ID IN (SELECT event_ID FROM event WHERE restaurant_id = ?)
         GROUP BY event_ID
-        """, (id,)
-    ).fetchall()
+    """, (id,))
+    rsvp_counts = cursor.fetchall()
 
+    # Create a dictionary for RSVP counts
     rsvp_dict = {rsvp["event_ID"]: rsvp["rsvp_count"] for rsvp in rsvp_counts}
 
     # Fetch reviews for the restaurant
-    reviews = cursor.execute("""
+    cursor.execute("""
         SELECT r.text, r.score, r.date_time, u.username 
         FROM review r
         JOIN user u ON r.user_id = u.user_id
         WHERE r.restaurant_id = ?
         ORDER BY r.date_time DESC
-    """, (id,)).fetchall()
+    """, (id,))
+    reviews = cursor.fetchall()
 
     # Format review dates
     reviews_list = []
@@ -123,11 +127,37 @@ def restaurant_detail(id):
         for event in events
     ]
 
+    # Fetch user data
+    user_id = session.get('user_id')
+    user = None
+
+    if user_id:
+        cursor.execute("""
+            SELECT user_id, username, role, is_logged 
+            FROM user 
+            WHERE user_id = ?
+        """, (user_id,))
+        user_data = cursor.fetchone()
+
+        if user_data:
+            user = {
+                "user_id": user_data["user_id"],
+                "username": user_data["username"],
+                "role": user_data["role"],
+                "is_logged": bool(user_data["is_logged"])
+            }
+
     cursor.close()
     conn.close()
 
-    return render_template("restaurant_detail.html", restaurant=restaurant, events=events_list, reviews=reviews_list)
-
+    # Pass user object along with other data
+    return render_template(
+        "restaurant_detail.html",
+        restaurant=restaurant,
+        events=events_list,
+        reviews=reviews_list,
+        user=user
+    )
 @restaurants.route("/create", methods=["GET", "POST"])
 def create_restaurant():
     # Check if user is logged in
