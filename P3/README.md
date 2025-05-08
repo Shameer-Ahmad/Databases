@@ -19,3 +19,6 @@ Joseph - Testing engineer, README testing approach section, ...
 ## A description of our test and testing approach:
 
 ## A description of any features we wish to draw the reader's attention to:
+Our home page provides access to a search filter for users to find restaurants by name, neighborhood, and cuisine type.
+
+Our events page allows users access to a list of events occurring at Boston restaurants. Users are able to see the date and time of events and RSVP to their desired events. When logged in as a restaurant owner, users are able to create new events with set capacities. This allows restaurants to reach their targeted audience. 
