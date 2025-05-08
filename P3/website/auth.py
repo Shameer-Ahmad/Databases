@@ -3,6 +3,15 @@ from website.db import get_db_connection
 
 auth = Blueprint("auth", __name__)
 
+@auth.route("/", methods=["GET"])
+def landing_page():
+    conn = get_db_connection()
+    restaurants = conn.execute("SELECT restaurant_name, street_number, street_name, city, state, zip_code, cuisine_type FROM restaurant").fetchall()
+    conn.close()
+
+    # Render the landing page with the list of restaurants
+    return render_template("landing.html", restaurants=restaurants)
+                           
 @auth.route("/login", methods=["GET", "POST"])
 def login():
     if request.method == "POST":
@@ -26,7 +35,7 @@ def login():
             conn.commit()
             conn.close()
 
-            return f"Welcome, {dict(user)}!"
+            return redirect(url_for('auth.landing_page'))
         else:
             return "Invalid credentials", 401
 
@@ -58,7 +67,7 @@ def register():
         # Set user ID in session
         session['user_id'] = user_id
 
-        return f"Registered: {username} / {role} / {verification or 'N/A'} (user_id: {user_id})"
+        return redirect(url_for('auth.landing_page'))
     return render_template("register.html")
 
 @auth.route("/logout")
