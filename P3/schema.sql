@@ -42,12 +42,14 @@ CREATE TABLE restaurant_phone (
 DROP TABLE IF EXISTS review;
 
 CREATE TABLE review (
-    user_id TEXT,
-    date_time DATETIME,
+    review_id INTEGER PRIMARY KEY AUTOINCREMENT,
+    user_id INTEGER NOT NULL,
+    restaurant_id INTEGER NOT NULL,
+    date_time DATETIME NOT NULL,
     text TEXT,
     score REAL CHECK (score BETWEEN 0.0 AND 5.0),
-    PRIMARY KEY (user_id, date_time),
-    FOREIGN KEY (user_id) REFERENCES user(user_id)
+    FOREIGN KEY (user_id) REFERENCES user(user_id) ON DELETE CASCADE,
+    FOREIGN KEY (restaurant_id) REFERENCES restaurant(restaurant_id) ON DELETE CASCADE
 );
 
 CREATE TABLE event (

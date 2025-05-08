@@ -4,6 +4,7 @@ def create_app():
     app = Flask(__name__)
     app.secret_key = "mysecretkey"
     app.config['VERIFICATION_CODE'] = "foodies"
+    app.config['SECRET_KEY'] = 'secretkey'
 
     from .views import views
     from .auth import auth

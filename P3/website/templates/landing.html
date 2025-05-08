@@ -37,7 +37,7 @@
                         <textarea name="text" placeholder="Write your review..." rows="2" cols="40" required></textarea><br>
                         <label for="score">Score:</label>
                         <input type="number" name="score" min="0" max="5" step="0.1" required>
-                        <input type="hidden" name="restaurant_name" value="{{ restaurant['restaurant_name'] }}">
+                        <input type="hidden" name="restaurant_id" value="{{ restaurant['restaurant_id'] }}">
                         <button type="submit">Submit Review</button>
                     </form>
                 </div>

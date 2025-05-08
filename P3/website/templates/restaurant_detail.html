@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Restaurant Events</title>
+    <title>{{ restaurant['restaurant_name'] }} - Events and Reviews</title>
     <link href="{{ url_for('static', filename='style.css') }}" rel="stylesheet">
 </head>
 <body>
@@ -43,43 +43,49 @@
     </div>
 </div>
 
-<!-- Header Section with "Add Event" Button (Only for Owners) -->
-<div style="display: flex; justify-content: space-between; align-items: center; padding: 0 1rem; margin-bottom: 1rem;">
-    <h2 style="text-align: left; color: #000;">Events for {{ restaurant['restaurant_name'] }}</h2>
-    
-    {% if user and user['role'] == 'owner' and user['user_id'] == restaurant['user_id'] %}
-    <a href="{{ url_for('events.create_event', restaurant_id=restaurant['restaurant_id']) }}" 
-        style="background-color: #28a745; color: #fff; padding: 0.5rem 1rem; border-radius: 8px; text-decoration: none;">
-        Add Event
-    </a>
-    {% endif %}
+<!-- Header Section - Only Restaurant Name -->
+<div style="padding: 1rem; margin-bottom: 1rem; text-align: center;">
+    <h2>{{ restaurant['restaurant_name'] }}</h2>
 </div>
 
 <!-- Events Section (Visible to Everyone) -->
-<div class="manage-restaurants-list">
+<div class="manage-restaurants-list" style="margin-bottom: 2rem;">
+    <h3>Events</h3>
     {% if events %}
         <ul style="list-style-type: none; padding: 0; margin: 0;">
             {% for event in events %}
             <li style="background-color: #f9f9f9; padding: 0.8rem 1rem; border-radius: 8px; margin-bottom: 0.8rem; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); display: flex; align-items: center;">
-                <div style="flex-grow: 1; text-align: left;">
-                    <div style="font-weight: bold; margin-bottom: 0.2rem;">{{ event['event_name'] }}</div>
-                    <div style="font-size: 0.9rem; color: gray;">Date: {{ event['date_time'] }}</div>
-                    <div style="font-size: 0.9rem; color: gray;">Capacity: {{ event['capacity'] }}</div>
+                <div style="flex-grow: 1;">
+                    <strong>{{ event['event_name'] }}</strong><br>
+                    <span style="color: gray;">Date: {{ event['date_time'] }}</span><br>
+                    <span style="color: gray;">Capacity: {{ event['capacity'] }} | RSVPs: {{ event['rsvp_count'] }}</span>
                 </div>
-
-                <!-- Delete Button (Only for Owners) -->
-                {% if user and user['role'] == 'owner' and user['user_id'] == restaurant['user_id'] %}
-                <form action="{{ url_for('events.delete_event', event_id=event['event_ID']) }}" method="POST" style="margin-left: auto;">
-                    <button type="submit" style="background-color: #dc3545; color: #fff; padding: 0.5rem 1rem; border: none; border-radius: 8px; cursor: pointer;">
-                        Delete
-                    </button>
-                </form>
-                {% endif %}
             </li>
             {% endfor %}
         </ul>
     {% else %}
-        <p style="text-align: left; color: #000; margin-left: 1rem;">No events for this restaurant.</p>
+        <p>No events for this restaurant.</p>
+    {% endif %}
+</div>
+
+<!-- Reviews Section (Same Style as Events) -->
+<div class="manage-restaurants-list">
+    <h3>Reviews</h3>
+    {% if reviews %}
+        <ul style="list-style-type: none; padding: 0; margin: 0;">
+            {% for review in reviews %}
+            <li style="background-color: #f9f9f9; padding: 0.8rem 1rem; border-radius: 8px; margin-bottom: 0.8rem; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); display: flex; align-items: center;">
+                <div style="flex-grow: 1;">
+                    <strong>{{ review['username'] }}</strong><br>
+                    <span style="color: gray;">Date: {{ review['formatted_date'] }}</span><br>
+                    <span style="color: gray;">Score: {{ review['score'] }}/5</span>
+                    <p>{{ review['text'] }}</p>
+                </div>
+            </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>No reviews for this restaurant.</p>
     {% endif %}
 </div>
 
