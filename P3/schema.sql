@@ -1,12 +1,15 @@
 DROP TABLE IF EXISTS user;
+DROP TABLE IF EXISTS rsvp;
+DROP TABLE IF EXISTS event;
 
-CREATE TABLE user (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    first_name TEXT NOT NULL,
-    last_name TEXT NOT NULL,
-    email TEXT NOT NULL UNIQUE,
-    password TEXT NOT NULL
+CREATE TABLE IF NOT EXISTS user (
+    user_id INTEGER PRIMARY KEY AUTOINCREMENT,
+    username TEXT NOT NULL UNIQUE,
+    password TEXT NOT NULL,
+    role TEXT CHECK(role IN ('customer', 'owner')) NOT NULL,
+    is_logged BOOLEAN NOT NULL DEFAULT 0
 );
+
 
 DROP TABLE IF EXISTS restaurant;
 
@@ -33,6 +36,7 @@ CREATE TABLE restaurant_phone (
     CHECK (phone_number LIKE '___-___-____')
 );
 
+
 DROP TABLE IF EXISTS review;
 
 CREATE TABLE review (
@@ -45,3 +49,22 @@ CREATE TABLE review (
     FOREIGN KEY (user_id) REFERENCES customer(username),
     FOREIGN KEY (restaurant_id) REFERENCES restaurant(restaurant_id)
 );
+=======
+CREATE TABLE event (
+    event_ID INTEGER PRIMARY KEY,
+    event_name TEXT,
+    date_time DATETIME,
+    capacity INTEGER CHECK (capacity > 0)
+);
+
+
+CREATE TABLE rsvp (
+    user_ID  INTEGER NOT NULL,
+    event_ID INTEGER NOT NULL,
+    PRIMARY KEY (user_ID, event_ID),
+    FOREIGN KEY (user_ID)  REFERENCES user(id),
+    FOREIGN KEY (event_ID) REFERENCES event(event_ID)
+);
+
+
+

@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+
+{% block title %}Events - Aviram's Diners{% endblock %}
+
+{% block header %}
+    <h1>Upcoming Events</h1>
+{% endblock %}
+
+{% block content %}
+    <!-- Display the list of events -->
+    <ul id="events-list">
+        {% for ev in events %}
+            <li class="event-item">
+                <strong>{{ ev.event_name }}</strong>  {{ ev.formatted_date }} 
+                <em>{{ ev.capacity }} Occupancy</em>
+
+                <!-- Form for deleting an event -->
+                <form method="POST" action="{{ url_for('events.delete_event', event_id=ev.event_ID) }}" style="display:inline;">
+                    <input type="hidden" name="_method" value="DELETE">  <!-- Method override -->
+                    <button class="btn btn-blue" type="submit">Delete</button>
+                </form>
+            </li>
+        {% else %}
+            <li><em>No Events Scheduled.</em></li>
+        {% endfor %}
+    </ul>
+
+    <!-- Form to create a new event -->
+    <form id="add-event" method="post" action="{{ url_for('events.create_event') }}">
+        <div class="form-group">
+            <label for="event_name">Event Name</label>
+            <input name="event_name" id="event_name" type="text" placeholder="Event Name" required>
+        </div>
+        <div class="form-group">
+            <label for="date_time">Event Date and Time</label>
+            <input name="date_time" id="date_time" type="datetime-local" required>
+        </div>
+        <div class="form-group">
+            <label for="capacity">Event Capacity</label>
+            <input name="capacity" id="capacity" type="number" placeholder="Capacity" min="1" required>
+        </div>
+        <button class="btn btn-blue" type="submit">Add Event</button>
+    </form>
+{% endblock %}

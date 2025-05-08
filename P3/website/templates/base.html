@@ -1,0 +1,42 @@
+<!doctype html>
+<html>
+<head>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <title>Aviram's Diners</title>
+</head>
+<body>
+
+<!-- Banner Section -->
+<div class="banner">
+    <h1>Aviram's Diners</h1>
+
+    <div class="search-auth-container">
+        <!-- Search Form -->
+        <form action="{{ url_for('restaurants.all_restaurants') }}" method="GET" class="search-form">
+            <input type="text" name="restaurant_name" placeholder="Restaurant Name" class="search-bar">
+            <input type="text" name="neighborhood" placeholder="Neighborhood" class="search-bar">
+            <input type="text" name="cuisine_type" placeholder="Cuisine Type" class="search-bar">
+            <button type="submit" class="search-button">Search</button>
+        </form>
+
+        <!-- Authentication Buttons -->
+        <div class="auth-buttons">
+            {% if session.get('user_id') %}
+                <form action="{{ url_for('auth.logout') }}" method="GET" class="logout-form">
+                    <button type="submit" class="auth-button">Logout</button>
+                </form>
+            {% else %}
+                <a href="{{ url_for('auth.login') }}" class="auth-button">Login</a>
+                <a href="{{ url_for('auth.register') }}" class="auth-button">Register</a>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<!-- Content Section -->
+<div class="content">
+    {% block content %}{% endblock %}
+</div>
+
+</body>
+</html>
