@@ -163,6 +163,8 @@ def manage_restaurants():
 
     # Render the manage restaurants page
     return render_template("manage_restaurants.html", restaurants=restaurants)
+
+
 @restaurants.route("/edit/<int:id>", methods=["GET", "POST"])
 def edit_restaurant(id):
     # Check if user is logged in
@@ -180,7 +182,7 @@ def edit_restaurant(id):
     if not restaurant:
         cursor.close()
         conn.close()
-        return jsonify({"error": "Restaurant not found or unauthorized"}), 404
+        return "Restaurant not found or unauthorized", 404
 
     # If POST request, update the restaurant
     if request.method == "POST":
