@@ -241,3 +241,30 @@ h2 {
   margin-top: 2rem;
   font-size: 1.5rem;
 }
+
+/* Rating Buttons Styling */
+.rating-buttons {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  margin-top: 0.5rem;
+}
+
+.rating-buttons input[type="radio"] {
+  display: none;
+}
+
+.rating-label {
+  background-color: #ddd;
+  color: #333;
+  padding: 0.6rem 1.2rem;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s, color 0.3s;
+  font-weight: bold;
+}
+
+.rating-buttons input[type="radio"]:checked + .rating-label {
+  background-color: #275a80;
+  color: white;
+}

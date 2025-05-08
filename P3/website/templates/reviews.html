@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+
+{% block title %}Write a Review - Aviram's Diners{% endblock %}
+
+{% block header %}
+    <h1>Write a Review</h1>
+{% endblock %}
+
+{% block content %}
+    <!-- Review Form -->
+    <form id="review-form" method="POST">
+        <div class="form-group">
+            <label for="restaurant_name">Restaurant Name</label>
+            <input name="restaurant_name" id="restaurant_name" type="text" required>
+        </div>
+
+        <div class="form-group">
+            <label>Rating (1 to 5)</label>
+            <div class="rating-buttons">
+                {% for i in range(1, 6) %}
+                    <input type="radio" name="score" id="score{{ i }}" value="{{ i }}" required>
+                    <label class="rating-label" for="score{{ i }}">{{ i }}</label>
+                {% endfor %}
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="text">Your Review</label>
+            <textarea name="text" id="text" rows="10" cols="1000" placeholder="Write your review here..." required></textarea>
+        </div>
+
+        <button class="btn btn-blue" type="submit">Submit Review</button>
+    </form>
+
+{% endblock %}
