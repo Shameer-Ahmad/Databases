@@ -1,6 +1,7 @@
 
-from flask import Blueprint, request, jsonify, render_template, redirect, url_for 
+from flask import Blueprint, session, request, jsonify, render_template, redirect, url_for
 from website.db import get_db_connection
+
 
 restaurants = Blueprint("restaurants", __name__)
 
@@ -53,20 +54,30 @@ def restaurant_detail(id):
 
 @restaurants.route("/create", methods=["GET"])
 def create_restaurant_form():
+    # Check if user is logged in
+    user_id = session.get('user_id')
+    if not user_id:
+        return redirect(url_for('auth.login'))
+
     return render_template("create_restaurant.html")
 
-# Creates a new restaurant (POST request)
+
 @restaurants.route("/create", methods=["POST"])
 def create_restaurant():
+    # Check if user is logged in
+    user_id = session.get('user_id')
+    if not user_id:
+        return redirect(url_for('auth.login'))
+
     # Get form data
-    data = request.form  # For form submissions
-    
+    data = request.form
+
     conn = get_db_connection()
     cur = conn.cursor()
 
     cur.execute("""
-        INSERT INTO restaurant (restaurant_name, street_number, street_name, apt_number, city, state, zip_code, cuisine_type) 
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+        INSERT INTO restaurant (restaurant_name, street_number, street_name, apt_number, city, state, zip_code, cuisine_type, user_id) 
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
     """, (
         data.get("restaurant_name"), 
         data.get("street_number"),
@@ -75,15 +86,15 @@ def create_restaurant():
         data.get("city"),
         data.get("state"),
         data.get("zip_code"),
-        data.get("cuisine_type")
+        data.get("cuisine_type"),
+        user_id
     ))
 
     conn.commit()
-    new_restaurant_id = cur.lastrowid  # Get the ID of the newly inserted restaurant
+    cur.close()
     conn.close()
 
-    return redirect(url_for("restaurants.all_restaurants"))  # Or redirect to any page you want
-
+    return redirect(url_for("restaurants.manage_restaurants"))
 
 # Updates a restaurant using restaurant_id
 @restaurants.route("/<int:id>", methods=["PUT"])
@@ -114,7 +125,7 @@ def update_restaurant(id):
     return jsonify({"message": "Restaurant updated successfully!"})
 
 # Deletes a restaurant using restaurant_id
-@restaurants.route("/<int:id>", methods=["DELETE"])
+@restaurants.route("/<int:id>", methods=["POST"])
 def delete_restaurant(id):
     conn = get_db_connection()
     cur = conn.cursor()
@@ -128,7 +139,77 @@ def delete_restaurant(id):
     if rows_affected == 0:
         return jsonify({"error": "Restaurant not found"}), 404
     
-    return jsonify({"message": "Restaurant deleted successfully!"})
+    return redirect(url_for("restaurants.manage_restaurants"))
 
+@restaurants.route("/manage", methods=["GET", "POST"])
+def manage_restaurants():
+    # Check if the user is logged in
+    user_id = session.get('user_id')
 
-#Restaurant Search 
+    # If not logged in, redirect to login
+    if not user_id:
+        return redirect(url_for('auth.login'))
+
+    # Fetch restaurants owned by the logged-in owner
+    conn = get_db_connection()
+    cursor = conn.cursor()
+
+    cursor.execute("""
+        SELECT * FROM restaurant WHERE user_id = ?
+    """, (user_id,))
+    restaurants = cursor.fetchall()
+    cursor.close()
+    conn.close()
+
+    # Render the manage restaurants page
+    return render_template("manage_restaurants.html", restaurants=restaurants)
+@restaurants.route("/edit/<int:id>", methods=["GET", "POST"])
+def edit_restaurant(id):
+    # Check if user is logged in
+    user_id = session.get('user_id')
+    if not user_id:
+        return redirect(url_for('auth.login'))
+
+    conn = get_db_connection()
+    cursor = conn.cursor()
+
+    # Fetch the restaurant data to prefill the form
+    cursor.execute("SELECT * FROM restaurant WHERE restaurant_id = ? AND user_id = ?", (id, user_id))
+    restaurant = cursor.fetchone()
+
+    if not restaurant:
+        cursor.close()
+        conn.close()
+        return jsonify({"error": "Restaurant not found or unauthorized"}), 404
+
+    # If POST request, update the restaurant
+    if request.method == "POST":
+        data = request.form
+
+        cursor.execute("""
+            UPDATE restaurant 
+            SET restaurant_name = ?, street_number = ?, street_name = ?, apt_number = ?, city = ?, state = ?, zip_code = ?, cuisine_type = ? 
+            WHERE restaurant_id = ?
+        """, (
+            data.get("restaurant_name"), 
+            data.get("street_number"),
+            data.get("street_name"),
+            data.get("apt_number"),
+            data.get("city"),
+            data.get("state"),
+            data.get("zip_code"),
+            data.get("cuisine_type"),
+            id
+        ))
+
+        conn.commit()
+        cursor.close()
+        conn.close()
+
+        return redirect(url_for("restaurants.manage_restaurants"))
+
+    cursor.close()
+    conn.close()
+
+    # Render the edit form with pre-filled data
+    return render_template("edit_restaurant.html", restaurant=restaurant)
