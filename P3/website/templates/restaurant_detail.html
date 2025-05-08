@@ -48,7 +48,17 @@
     <h2>{{ restaurant['restaurant_name'] }}</h2>
 </div>
 
-<!-- Events Section (Visible to Everyone) -->
+<!-- Add Event Button (Visible to Owner Only) -->
+{% if user and user['role'] == 'owner' %}
+<div style="text-align: right; margin-bottom: 1rem;">
+    <a href="{{ url_for('events.create_event', restaurant_id=restaurant['restaurant_id']) }}" 
+       style="background-color: #28a745; color: #fff; padding: 0.5rem 1rem; border-radius: 8px; text-decoration: none;">
+        Add Event
+    </a>
+</div>
+{% endif %}
+
+<!-- Events Section -->
 <div class="manage-restaurants-list" style="margin-bottom: 2rem;">
     <h3>Events</h3>
     {% if events %}
@@ -68,20 +78,32 @@
     {% endif %}
 </div>
 
-<!-- Reviews Section (Same Style as Events) -->
+<!-- Reviews Section -->
 <div class="manage-restaurants-list">
     <h3>Reviews</h3>
     {% if reviews %}
         <ul style="list-style-type: none; padding: 0; margin: 0;">
             {% for review in reviews %}
+            <!-- Events Section -->
+<div class="manage-restaurants-list" style="margin-bottom: 2rem;">
+    <h3>Events</h3>
+    {% if events %}
+        <ul style="list-style-type: none; padding: 0; margin: 0;">
+            {% for event in events %}
             <li style="background-color: #f9f9f9; padding: 0.8rem 1rem; border-radius: 8px; margin-bottom: 0.8rem; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); display: flex; align-items: center;">
                 <div style="flex-grow: 1;">
-                    <strong>{{ review['username'] }}</strong><br>
-                    <span style="color: gray;">Date: {{ review['formatted_date'] }}</span><br>
-                    <span style="color: gray;">Score: {{ review['score'] }}/5</span>
-                    <p>{{ review['text'] }}</p>
+                    <strong>{{ event['event_name'] }}</strong><br>
+                    <span style="color: gray;">Date: {{ event['formatted_date'] }}</span><br>
+                    <span style="color: gray;">Capacity: {{ event['capacity'] }} | RSVPs: {{ event['rsvp_count'] }}</span>
                 </div>
             </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>No events for this restaurant.</p>
+    {% endif %}
+</div>
+
             {% endfor %}
         </ul>
     {% else %}

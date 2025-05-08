@@ -5,15 +5,22 @@ views = Blueprint("views", __name__)
 
 @views.route("/")
 def home():
-    # Fetch all restaurants from the database
+    # Fetch all restaurants with neighborhood data
     conn = get_db_connection()
-    restaurants = conn.execute("""
-        SELECT restaurant_id, restaurant_name, street_number, street_name, city, state, zip_code, cuisine_type 
-        FROM restaurant
-    """).fetchall()
+    cursor = conn.cursor()
+    cursor.execute("""
+        SELECT r.restaurant_id, r.restaurant_name, r.street_number, r.street_name, 
+               r.city, r.state, r.zip_code, r.cuisine_type, nz.neighborhood 
+        FROM restaurant r 
+        LEFT JOIN neighborhood_zip nz ON r.zip_code = nz.zip_code
+    """)
+    restaurants = cursor.fetchall()
     conn.close()
+
+    # Fetch user data
     user_id = session.get('user_id')
     user = None
+
     if user_id:
         conn = get_db_connection()
         cursor = conn.cursor()
@@ -21,9 +28,8 @@ def home():
         user = cursor.fetchone()
         conn.close()
 
-
-    # Render the landing page with the list of restaurants
-    return render_template("landing.html", restaurants=restaurants, user = user)
+    # Render the landing page with the list of restaurants and user info
+    return render_template("landing.html", restaurants=restaurants, user=user)
 
 @views.route("/about")
 def about():

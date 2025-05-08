@@ -17,72 +17,83 @@
         </a>
 
         {% if session.get('user_id') %}
-            <form action="{{ url_for('auth.logout') }}" method="GET" class="logout-form" style="display: inline;">
-                <button type="submit" class="auth-button" style="background-color: #275a80; color: #fff; padding: 0.5rem 1rem; border: none; border-radius: 8px; cursor: pointer;">
+            <form action="{{ url_for('auth.logout') }}" method="GET" style="display: inline;">
+                <button type="submit" style="background-color: #275a80; color: #fff; padding: 0.5rem 1rem; border: none; border-radius: 8px; cursor: pointer;">
                     Logout
                 </button>
             </form>
         {% else %}
-            <a href="{{ url_for('auth.login') }}" class="auth-button" style="background-color: #275a80; color: #fff; padding: 0.5rem 1rem; border-radius: 8px; text-decoration: none; margin-right: 0.5rem;">
+            <a href="{{ url_for('auth.login') }}" style="background-color: #275a80; color: #fff; padding: 0.5rem 1rem; border-radius: 8px; text-decoration: none; margin-right: 0.5rem;">
                 Login
             </a>
-            <a href="{{ url_for('auth.register') }}" class="auth-button" style="background-color: #275a80; color: #fff; padding: 0.5rem 1rem; border-radius: 8px; text-decoration: none;">
+            <a href="{{ url_for('auth.register') }}" style="background-color: #275a80; color: #fff; padding: 0.5rem 1rem; border-radius: 8px; text-decoration: none;">
                 Register
             </a>
         {% endif %}
     </div>
 </div>
 
-
 <!-- Content Section -->
 <div class="content" style="max-width: 600px; margin: 2rem auto; background-color: #f9f9f9; padding: 1rem; border-radius: 8px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);">
     <h2 style="text-align: center;">Edit Restaurant</h2>
 
     <form id="edit-restaurant-form" method="POST" action="{{ url_for('restaurants.edit_restaurant', id=restaurant['restaurant_id']) }}">
+        
+        <!-- Restaurant Name -->
         <div class="form-group" style="margin-bottom: 1rem;">
             <label for="restaurant_name">Restaurant Name</label>
-            <input name="restaurant_name" id="restaurant_name" type="text" value="{{ restaurant['restaurant_name'] }}" required style="width: 100%; padding: 0.5rem; border-radius: 8px; border: 1px solid #ccc;">
+            <input name="restaurant_name" type="text" value="{{ restaurant['restaurant_name'] }}" required style="width: 100%; padding: 0.5rem; border-radius: 8px; border: 1px solid #ccc;">
         </div>
 
+        <!-- Street Number and Street Name -->
         <div class="form-group" style="display: flex; gap: 1rem; margin-bottom: 1rem;">
-            <div class="street-number" style="flex: 1;">
+            <div style="flex: 1;">
                 <label for="street_number">Street Number</label>
-                <input name="street_number" id="street_number" type="text" value="{{ restaurant['street_number'] }}" required style="width: 100%; padding: 0.5rem; border-radius: 8px; border: 1px solid #ccc;">
+                <input name="street_number" type="text" value="{{ restaurant['street_number'] }}" required style="width: 100%; padding: 0.5rem; border-radius: 8px; border: 1px solid #ccc;">
             </div>
-
-            <div class="street-name" style="flex: 2;">
+            <div style="flex: 2;">
                 <label for="street_name">Street Name</label>
-                <input name="street_name" id="street_name" type="text" value="{{ restaurant['street_name'] }}" required style="width: 100%; padding: 0.5rem; border-radius: 8px; border: 1px solid #ccc;">
+                <input name="street_name" type="text" value="{{ restaurant['street_name'] }}" required style="width: 100%; padding: 0.5rem; border-radius: 8px; border: 1px solid #ccc;">
             </div>
         </div>
 
+        <!-- Apt Number -->
         <div class="form-group" style="margin-bottom: 1rem;">
-            <label for="apt_number">Apt Number (optional)</label>
-            <input name="apt_number" id="apt_number" type="text" value="{{ restaurant['apt_number'] or '' }}" style="width: 100%; padding: 0.5rem; border-radius: 8px; border: 1px solid #ccc;">
+            <label for="apt_number">Apt Number (Optional)</label>
+            <input name="apt_number" type="text" value="{{ restaurant['apt_number'] or '' }}" style="width: 100%; padding: 0.5rem; border-radius: 8px; border: 1px solid #ccc;">
+        </div>
+
+        <!-- Neighborhood and City -->
+        <div class="form-group" style="margin-bottom: 1rem;">
+            <label for="neighborhood">Neighborhood</label>
+            <input name="neighborhood" type="text" value="{{ restaurant['neighborhood'] }}" required style="width: 100%; padding: 0.5rem; border-radius: 8px; border: 1px solid #ccc;">
         </div>
 
         <div class="form-group" style="margin-bottom: 1rem;">
-            <label for="city">Neighborhood</label>
-            <input name="city" id="Neighborhood" type="text" value="{{ restaurant['city'] }}" required style="width: 100%; padding: 0.5rem; border-radius: 8px; border: 1px solid #ccc;">
+            <label for="city">City</label>
+            <input name="city" type="text" value="{{ restaurant['city'] }}" required style="width: 100%; padding: 0.5rem; border-radius: 8px; border: 1px solid #ccc;">
         </div>
 
+        <!-- State and Zip Code -->
         <div class="form-group" style="margin-bottom: 1rem;">
             <label for="state">State</label>
-            <input name="state" id="state" type="text" value="{{ restaurant['state'] }}" required style="width: 100%; padding: 0.5rem; border-radius: 8px; border: 1px solid #ccc;">
+            <input name="state" type="text" value="{{ restaurant['state'] }}" required style="width: 100%; padding: 0.5rem; border-radius: 8px; border: 1px solid #ccc;">
         </div>
 
         <div class="form-group" style="margin-bottom: 1rem;">
-            <label for="zip_code">Zip Code</label>
-            <input name="zip_code" id="zip_code" type="text" value="{{ restaurant['zip_code'] }}" required style="width: 100%; padding: 0.5rem; border-radius: 8px; border: 1px solid #ccc;">
+            <label for="zip_code">ZIP Code</label>
+            <input name="zip_code" type="text" value="{{ restaurant['zip_code'] }}" required style="width: 100%; padding: 0.5rem; border-radius: 8px; border: 1px solid #ccc;">
         </div>
 
+        <!-- Cuisine Type -->
         <div class="form-group" style="margin-bottom: 1rem;">
             <label for="cuisine_type">Cuisine Type</label>
-            <input name="cuisine_type" id="cuisine_type" type="text" value="{{ restaurant['cuisine_type'] }}" required style="width: 100%; padding: 0.5rem; border-radius: 8px; border: 1px solid #ccc;">
+            <input name="cuisine_type" type="text" value="{{ restaurant['cuisine_type'] }}" required style="width: 100%; padding: 0.5rem; border-radius: 8px; border: 1px solid #ccc;">
         </div>
 
+        <!-- Submit Button -->
         <div style="text-align: center;">
-            <button type="submit" class="btn btn-blue" style="background-color: #377ba8; color: #fff; padding: 0.75rem 1.5rem; border: none; border-radius: 8px; cursor: pointer;">
+            <button type="submit" style="background-color: #377ba8; color: #fff; padding: 0.75rem 1.5rem; border: none; border-radius: 8px; cursor: pointer;">
                 Update Restaurant
             </button>
         </div>

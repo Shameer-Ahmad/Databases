@@ -24,7 +24,7 @@ CREATE TABLE restaurant (
     state TEXT NOT NULL,
     zip_code TEXT NOT NULL,
     cuisine_type TEXT,
-    FOREIGN KEY (zip_code) REFERENCES neighborhood_zip(zip_code)
+    FOREIGN KEY (zip_code) REFERENCES neighborhood_zip(zip_code),
     FOREIGN KEY (user_id) REFERENCES user(user_id) ON DELETE CASCADE
 );
 
@@ -68,6 +68,14 @@ CREATE TABLE rsvp (
     PRIMARY KEY (user_ID, event_ID),
     FOREIGN KEY (user_ID)  REFERENCES user(id),
     FOREIGN KEY (event_ID) REFERENCES event(event_ID)
+);
+
+DROP TABLE IF EXISTS neighborhood_zip;
+
+CREATE TABLE neighborhood_zip (
+    neighborhood TEXT NOT NULL,
+    zip_code TEXT NOT NULL,
+    PRIMARY KEY (neighborhood, zip_code)
 );
 
 
