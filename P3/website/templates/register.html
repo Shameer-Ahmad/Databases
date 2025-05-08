@@ -1,13 +1,31 @@
-{% extends 'base.html' %}
-{% block title %}Register{% endblock %}
+<!doctype html>
+<html>
+<head>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <title>Register - Aviram's Diners</title>
+    <style>
+        input[type="text"], input[type="password"], input[type="number"], input[type="datetime-local"], .search-bar {
+            width: 100%;
+            padding: 0.75rem;
+            margin-bottom: 1rem;
+            border-radius: 10px;  /* Softer corners */
+            border: 1px solid #ddd;  /* Lighter border */
+            font-size: 1rem;
+            box-sizing: border-box;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        }
 
-{% block banner %}
-  <div class="banner">
-    <h1>Aviram’s Diners</h1>
-  </div>
-{% endblock %}
+        input[type="text"]:focus, 
+        input[type="password"]:focus, 
+        input[type="number"]:focus, 
+        input[type="datetime-local"]:focus, 
+        .search-bar:focus {
+            outline: none;
+            border-color: #377ba8;  /* Match button and theme color */
+            box-shadow: 0 0 5px rgba(55, 123, 168, 0.2);  /* Softer shadow */
+        }
+    </style>
 
-{% block content %}
     <script>
         function toggleVerificationField() {
             const role = document.getElementById('role').value;
@@ -23,35 +41,39 @@
 
         window.onload = toggleVerificationField;
     </script>
+</head>
+<body>
 
-    <h2 class="mb-4">Register</h2>
-    <form method="POST" action="{{ url_for('auth.register') }}"></form>
-        <div class="mb-3">
-            <form method="POST" action="{{ url_for('auth.register') }}">
-                <label for="username">Username</label>
-                <input type="text" name="username" id="username" required>
+<h2 class="mb-4">Register</h2>
+<form method="POST" action="{{ url_for('auth.register') }}">
 
-        </div>
+    <div class="mb-3">
+        <label for="username">Username:</label>
+        <input type="text" name="username" id="username" required>
+    </div>
 
-        <div class="mb-3">
-            <label for="password" class="form-label">Password</label>
-            <input type="text" name="password" id="password" required>
-        </div>
+    <div class="mb-3">
+        <label for="password">Password:</label>
+        <input type="password" name="password" id="password" required>
+    </div>
 
-        <div class="mb-3">
-            <label for="role" class="form-label">Customer or Owner?</label>
-            <select type="text" name="role" id="role" class="form-select" required>
-                <option value="" disabled selected>Select your role</option>
-                <option value="customer">Customer</option>
-                <option value="owner">Owner</option>
-            </select>
-        </div>
+    <div class="mb-3">
+        <label for="role">Customer or Owner?</label>
+        <select name="role" id="role" onchange="toggleVerificationField()" required>
+            <option value="" disabled selected>Select your role</option>
+            <option value="customer">Customer</option>
+            <option value="owner">Owner</option>
+        </select>
+    </div>
 
-        <div class="mb-3" id="verification-field" style="display: none;">
-            <label for="verification">Verification:</label>
-            <input type="text" name="verification" id="verification"><br><br>
-        </div>
+    <div class="mb-3" id="verification-field" style="display: none;">
+        <label for="verification">Verification:</label>
+        <input type="text" name="verification" id="verification">
+    </div>
 
-        <button type="submit" class="button">Register</button>
-    </form>
-{% endblock %}
+    <button type="submit" class="button">Register</button>
+
+</form>
+
+</body>
+</html>

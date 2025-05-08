@@ -1,28 +1,47 @@
-{% extends 'base.html' %}
+<!doctype html>
+<html>
+  <head>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <title>Login - Aviram's Diners</title>
+    <style>
+        input[type="text"], input[type="password"], input[type="number"], input[type="datetime-local"], .search-bar {
+  width: 100%;
+  padding: 0.75rem;
+  margin-bottom: 1rem;
+  border-radius: 10px;  /* Softer corners */
+  border: 1px solid #ddd;  /* Lighter border */
+  font-size: 1rem;
+  box-sizing: border-box;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
 
-{% block title %}Login{% endblock %}
+input[type="text"]:focus, 
+input[type="password"]:focus, 
+input[type="number"]:focus, 
+input[type="datetime-local"]:focus, 
+.search-bar:focus {
+  outline: none;
+  border-color: #377ba8;  /* Match button and theme color */
+  box-shadow: 0 0 5px rgba(55, 123, 168, 0.2);  /* Softer shadow */
+}
+    </style>
+</head>
+<body>
 
+<h2 class="mb-4">Login</h2>
+<form method="POST" action="{{ url_for('auth.login') }}">
+    <div class="mb-3">
+        <label for="username">Username:</label>
+        <input type="text" name="username" id="username" required>
+    </div>
 
-{% block banner %}
-  <div class="banner">
-    <h1>Aviram’s Diners</h1>
-  </div>
-{% endblock %}
+    <div class="mb-3">
+        <label for="password" class="form-label">Password</label>
+        <input type="password" name="password" id="password" required>
+    </div>
 
+    <button type="submit" class="button">Login</button>
+</form>
 
-
-{% block content %}
-    <h2 class="mb-4">Login</h2>
-    <form method="POST" action="{{ url_for('auth.login') }}" >
-        <div class="mb-3">
-            <label for="username">Username:</label>
-            <input type="text" name="username" id="username" required>
-        </div>
-
-        <div class="mb-3">
-            <label for="password" class="form-label">Password</label>
-            <input type="text" name="password" id="password" required>
-        </div>
-        <button type="submit" class="button">Login</button>
-    </form>
-{% endblock %}
+</body>
+</html>
