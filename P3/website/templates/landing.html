@@ -24,6 +24,21 @@
                 <div style="font-style: italic; color: gray; margin-top: 0.1rem;">
                     {{ restaurant['cuisine_type'] }}
                 </div>
+                {% if user and user['is_logged'] and user['role'] == 'customer' %}
+                <!-- Toggle button -->
+                <button type="button" onclick="toggleReviewForm('{{ loop.index0 }}') " id="review-button-{{ loop.index0 }}">Leave a Review</button>
+            
+                <!-- Review Form -->
+                <div id="review-form-{{ loop.index0 }}" style="display: none; margin-top: 10px;">
+                    <form method="POST" action="{{ url_for('reviews.create_review') }}">
+                        <textarea name="text" placeholder="Write your review..." rows="2" cols="40" required></textarea><br>
+                        <label for="score">Score:</label>
+                        <input type="number" name="score" min="0" max="5" step="0.1" required>
+                        <input type="hidden" name="restaurant_name" value="{{ restaurant['restaurant_name'] }}">
+                        <button type="submit">Submit Review</button>
+                    </form>
+                </div>
+                {% endif %}
             </li>
             {% endfor %}
         </ul>

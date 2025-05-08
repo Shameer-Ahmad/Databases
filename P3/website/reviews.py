@@ -1,64 +1,32 @@
-from flask import Blueprint, request, jsonify
+from flask import Blueprint, request, session, redirect, url_for
 from website.db import get_db_connection
+from datetime import datetime
 
 reviews = Blueprint("reviews", __name__)
 
 # Creates a new review
-@reviews.route("/", methods=["POST"])
+@reviews.route("/create_review", methods=["POST"])
 def create_review():
-    data = request.get_json()
+    user_id = session.get("user_id")
+    text = request.form.get("text")
+    score = request.form.get("score")
+    restaurant_name = request.form.get("restaurant_name")
+    date_time = datetime.now()
 
     conn = get_db_connection()
-    cur = conn.cursor()
-
-    cur.execute("""
-        INSERT INTO review (user_id, restaurant_id, date_time, text, score) 
-        VALUES (?, ?, ?, ?, ?)
-    """, (
-        data.get("user_id"), ### User ID will need to be updated -> TAKE OUT
-        data.get("restaurant_id"), 
-        data.get("date_time"),
-        data.get("text"),
-        data.get("score")
-    ))
-
+    cursor = conn.cursor()
+    cursor.execute("""
+        INSERT INTO review (user_id, date_time, text, score)
+        VALUES (?, ?, ?, ?)
+    """, (user_id, date_time, text, score))
     conn.commit()
     conn.close()
 
-    return jsonify({
-        "message": "Review added successfully!",
-        "user_ID": data.get("user_ID"), ### User ID will need to be updated -> TAKE OUT
-        "date_time": data.get("date_time")
-    }), 201
+    return f"Review submitted by user {user_id} for {restaurant_name}: '{text}' (Score: {score})"
+  
 
 # Gets all reviews for a user using user_id
-@reviews.route("/mine", methods=["GET"])
+@reviews.route("/my_reviews", methods=["GET"])
 def my_reviews():
-    #user_id = request.args.get("user_id")  ### User ID will need to be updated -> TAKE OUT
-    user_id = 5  # For testing purposes, hardcoded user_id to 5 -> TAKE OUT
+    return "list of my reviews"
 
-    if not user_id:
-        return jsonify({"error": "User ID is required"}), 400 ### User ID will need to be updated -> TAKE OUT
-    
-    conn = get_db_connection()
-    cur  = conn.cursor()
-    reviews = cur.execute("SELECT * FROM review WHERE user_id = ?", (user_id,)).fetchall()
-    conn.close()
-
-    if not reviews:
-        return jsonify({"error": "No reviews found for this user"}), 404
-
-    return jsonify([dict(review) for review in reviews])
-
-# Gets all reviews for a restaurant using restaurant_id
-@reviews.route("/restaurant/<int:restaurant_id>", methods=["GET"])
-def reviews_for_restaurant(restaurant_id):
-    conn = get_db_connection()
-    cur = conn.cursor()
-    reviews = cur.execute("SELECT * FROM review WHERE restaurant_id = ?", (restaurant_id,)).fetchall()
-    conn.close()
-
-    if not reviews:
-        return jsonify({"error": "No reviews found for this restaurant"}), 404
-
-    return jsonify([dict(review) for review in reviews])
