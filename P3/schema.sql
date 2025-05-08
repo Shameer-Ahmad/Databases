@@ -55,8 +55,10 @@ CREATE TABLE review (
 CREATE TABLE event (
     event_ID INTEGER PRIMARY KEY,
     event_name TEXT,
+    restaurant_id INTEGER NOT NULL,
     date_time DATETIME,
-    capacity INTEGER CHECK (capacity > 0)
+    capacity INTEGER CHECK (capacity > 0),
+    FOREIGN KEY (restaurant_id) REFERENCES restaurant(restaurant_id) ON DELETE CASCADE
 );
 
 

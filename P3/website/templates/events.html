@@ -1,32 +1,44 @@
-{% extends 'base.html' %}
+<!doctype html>
+<html>
+<head>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <title>Events - Aviram's Diners</title>
+</head>
+<body>
 
-{% block title %}Events - Aviram's Diners{% endblock %}
+<!-- Banner Section -->
+<div class="banner" style="padding: 1rem; background-color: #377ba8; color: #fff; display: flex; justify-content: space-between; align-items: center;">
+    <h1 style="margin: 0;">Aviram's Diners</h1>
 
-{% block header %}
-    <h1>Upcoming Events</h1>
-{% endblock %}
+    <div style="display: flex; gap: 0.5rem;">
+        <a href="{{ url_for('restaurants.manage_restaurants') }}" 
+           style="background-color: #275a80; color: #fff; padding: 0.5rem 1rem; border-radius: 8px; text-decoration: none;">
+            Manage Restaurants
+        </a>
 
-{% block content %}
-    <!-- Display the list of events -->
-    <ul id="events-list">
-        {% for ev in events %}
-            <li class="event-item">
-                <strong>{{ ev.event_name }}</strong>  {{ ev.formatted_date }} 
-                <em>{{ ev.capacity }} Occupancy</em>
-
-                <!-- Form for deleting an event -->
-                <form method="POST" action="{{ url_for('events.delete_event', event_id=ev.event_ID) }}" style="display:inline;">
-                    <input type="hidden" name="_method" value="DELETE">  <!-- Method override -->
-                    <button class="btn btn-blue" type="submit">Delete</button>
-                </form>
-            </li>
+        {% if session.get('user_id') %}
+            <form action="{{ url_for('auth.logout') }}" method="GET" class="logout-form" style="display: inline;">
+                <button type="submit" class="auth-button" style="background-color: #275a80; color: #fff; padding: 0.5rem 1rem; border: none; border-radius: 8px; cursor: pointer;">
+                    Logout
+                </button>
+            </form>
         {% else %}
-            <li><em>No Events Scheduled.</em></li>
-        {% endfor %}
-    </ul>
+            <a href="{{ url_for('auth.login') }}" class="auth-button" style="background-color: #275a80; color: #fff; padding: 0.5rem 1rem; border-radius: 8px; text-decoration: none; margin-right: 0.5rem;">
+                Login
+            </a>
+            <a href="{{ url_for('auth.register') }}" class="auth-button" style="background-color: #275a80; color: #fff; padding: 0.5rem 1rem; border-radius: 8px; text-decoration: none;">
+                Register
+            </a>
+        {% endif %}
+    </div>
+</div>
+
+<!-- Content Section -->
+<div class="content" style="max-width: 600px; margin: 2rem auto; background-color: #f9f9f9; padding: 1rem; border-radius: 8px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);">
+    <h2 style="text-align: left; margin-bottom: 1rem;">Upcoming Events</h2>
 
     <!-- Form to create a new event -->
-    <form id="add-event" method="post" action="{{ url_for('events.create_event') }}">
+    <form id="add-event" method="post" action="{{ url_for('events.create_event', restaurant_id=restaurant['restaurant_id']) }}">
         <div class="form-group">
             <label for="event_name">Event Name</label>
             <input name="event_name" id="event_name" type="text" placeholder="Event Name" required>
@@ -39,6 +51,13 @@
             <label for="capacity">Event Capacity</label>
             <input name="capacity" id="capacity" type="number" placeholder="Capacity" min="1" required>
         </div>
-        <button class="btn btn-blue" type="submit">Add Event</button>
+        <div style="text-align: center;">
+            <button class="btn btn-blue" type="submit" style="background-color: #377ba8; color: #fff; padding: 0.75rem 1.5rem; border: none; border-radius: 8px; cursor: pointer;">
+                Add Event
+            </button>
+        </div>
     </form>
-{% endblock %}
+</div>
+
+</body>
+</html>

@@ -5,19 +5,34 @@ from datetime import datetime
 events = Blueprint("events", __name__)
 
 # Allows the user to create a new event
-@events.route("/", methods=["POST"])
-def create_event():
-    name = request.form["event_name"]
-    date_time = request.form["date_time"]
-    capacity = request.form["capacity"]
+@events.route("/create_event/<int:restaurant_id>", methods=["GET", "POST"])
+def create_event(restaurant_id):
     conn = get_db_connection()
-    conn.execute(
-        "INSERT INTO event (event_name, date_time, capacity)VALUES (?, ?, ?)" , 
-        (name, date_time, capacity)
-        )
-    conn.commit()
+    restaurant = conn.execute("SELECT * FROM restaurant WHERE restaurant_id = ?", (restaurant_id,)).fetchone()
     conn.close()
-    return redirect(url_for("events.list_events"))
+
+    if not restaurant:
+        return "Restaurant not found", 404
+
+    if request.method == "POST":
+        name = request.form["event_name"]
+        date_time = request.form["date_time"]
+        capacity = request.form["capacity"]
+
+        conn = get_db_connection()
+        conn.execute(
+            "INSERT INTO event (restaurant_id, event_name, date_time, capacity) VALUES (?, ?, ?, ?)",
+            (restaurant_id, name, date_time, capacity)
+        )
+        conn.commit()
+        conn.close()
+
+        # Redirect to the restaurant detail page after saving the event
+        return redirect(url_for("restaurants.restaurant_detail", id=restaurant_id))
+
+    # Only pass the restaurant object
+    return render_template("events.html", restaurant=restaurant)
+
 
 # Gets the list of events occuring
 @events.route("/")
@@ -42,14 +57,26 @@ def list_events():
 
     return render_template("events.html", events=events_list)
 # Deletes an existing event
-#@events.route("/<int:event_id>", methods=["DELETE"])
 @events.route("/delete/<int:event_id>", methods=["POST"])
 def delete_event(event_id):
     conn = get_db_connection()
+
+    # Fetch the associated restaurant ID before deleting the event
+    restaurant = conn.execute(
+        "SELECT restaurant_id FROM event WHERE event_ID = ?", (event_id,)
+    ).fetchone()
+
+    if not restaurant:
+        conn.close()
+        return "Event not found", 404
+
+    # Proceed with deletion
     conn.execute("DELETE FROM event WHERE event_ID = ?", (event_id,))
     conn.commit()
     conn.close()
-    return redirect(url_for("events.list_events"))  # Redirect after deletion
+
+    # Redirect to the associated restaurant detail page
+    return redirect(url_for("restaurants.restaurant_detail", id=restaurant["restaurant_id"]))
 
 # Allows user to rsvp to an event
 @events.route("/<int:event_id>/rsvp", methods=["POST"])

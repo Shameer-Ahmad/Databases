@@ -39,22 +39,59 @@ def all_restaurants():
     return render_template("landing.html", restaurants=restaurants)
 
 # Gets the details of one restaurant using restaurant_id
-@restaurants.route("/<int:id>", methods=["GET"])
+@restaurants.route("/restaurant/<int:id>", methods=["GET"])
 def restaurant_detail(id):
     conn = get_db_connection()
     cursor = conn.cursor()
 
-    # Fetch the restaurant data
-    cursor.execute("SELECT restaurant_name FROM restaurant WHERE restaurant_id = ?", (id,))
-    restaurant = cursor.fetchone()
+    # Fetch restaurant details
+    restaurant = cursor.execute(
+        "SELECT * FROM restaurant WHERE restaurant_id = ?", (id,)
+    ).fetchone()
+
+    if not restaurant:
+        cursor.close()
+        conn.close()
+        return "Restaurant not found", 404
+
+    # Fetch events associated with the restaurant
+    events = cursor.execute(
+        """
+        SELECT event_ID, event_name, date_time, capacity 
+        FROM event 
+        WHERE restaurant_id = ?
+        """, (id,)
+    ).fetchall()
+
+    # Fetch RSVPs for the events
+    rsvp_counts = cursor.execute(
+        """
+        SELECT event_ID, COUNT(user_ID) AS rsvp_count 
+        FROM rsvp 
+        WHERE event_ID IN (SELECT event_ID FROM event WHERE restaurant_id = ?)
+        GROUP BY event_ID
+        """, (id,)
+    ).fetchall()
+
+    # Map RSVP counts to event IDs for quick lookup
+    rsvp_dict = {rsvp["event_ID"]: rsvp["rsvp_count"] for rsvp in rsvp_counts}
 
     cursor.close()
     conn.close()
 
-    if not restaurant:
-        return "Restaurant not found", 404
+    # Construct the events list with RSVP counts included
+    events_list = [
+        {
+            "event_ID": event["event_ID"],
+            "event_name": event["event_name"],
+            "date_time": event["date_time"],
+            "capacity": event["capacity"],
+            "rsvp_count": rsvp_dict.get(event["event_ID"], 0)
+        }
+        for event in events
+    ]
 
-    return render_template("restaurant_detail.html", restaurant=restaurant)
+    return render_template("restaurant_detail.html", restaurant=restaurant, events=events_list)
 
 @restaurants.route("/create", methods=["GET"])
 def create_restaurant_form():
