@@ -8,7 +8,7 @@ Madie - Implementing reviews and restaurants blueprints, slidedeck, README narra
 
 Katherine - Implementing events blueprints, front end design for events, ...
 
-Anthony - Front-end implementation for restaurant search filtering and reviews. 
+Anthony - Implementing restaurant blueprint, searching, restaurant creation, and event/review summary page. 
 
 Shameer - Implementing authorization blueprint, ...
 
@@ -19,8 +19,6 @@ Joseph - Testing engineer, README testing approach section, ...
 ## A description of our test and testing approach:
 
 ## A description of any features we wish to draw the reader's attention to:
-Our users have access to a large database of Boston restaurants, allowing them to uncover new places that meet their needs. Our home page provides access to a search filter for users to find restaurants by name, neighborhood, and cuisine type. 
+Our users have access to a large database of Boston restaurants, allowing them to uncover new places that meet their needs. Our home page provides access to a search filter for users to find restaurants by name, neighborhood, and cuisine type. Upon creating an account, users are invited to enter as either restaurant owners or customers.
 
-Upon creating an account, users are invited to enter as either restaurant owners or diners.
-
-Our events page allows users access to a list of events occurring at Boston restaurants. Users are able to see the date and time of events and RSVP to their desired events. When logged in as a restaurant owner, users are able to create new events with set capacities. This allows restaurants to reach their targeted audience. 
+Our events page allows users access to a list of events occurring at Boston restaurants. Customers are also allowed to leave reviews on the restaurants, which other users and owners can see. When logged in as a restaurant owner, users are able to create new events with set capacities. This allows owners to view their events, reviews, and  reach their targeted audience. 
