@@ -52,6 +52,8 @@ def all_restaurants():
 
 
 # Gets the details of one restaurant using restaurant_id
+from datetime import datetime
+
 @restaurants.route("/restaurant/<int:id>", methods=["GET"])
 def restaurant_detail(id):
     conn = get_db_connection()
@@ -91,6 +93,27 @@ def restaurant_detail(id):
     # Create a dictionary for RSVP counts
     rsvp_dict = {rsvp["event_ID"]: rsvp["rsvp_count"] for rsvp in rsvp_counts}
 
+    # Format event dates
+    events_list = []
+    for event in events:
+        try:
+            # Convert date_time to datetime object
+            date_obj = datetime.strptime(event["date_time"], "%Y-%m-%dT%H:%M")
+            # Format as "May 10th, 2025 - 2:30 PM"
+            day = date_obj.day
+            suffix = 'th' if 10 <= day <= 20 else {1: 'st', 2: 'nd', 3: 'rd'}.get(day % 10, 'th')
+            formatted_date = date_obj.strftime(f"%B {day}{suffix}, %Y - %I:%M %p")
+        except ValueError:
+            formatted_date = event["date_time"]  # Keep original format if parsing fails
+
+        events_list.append({
+            "event_ID": event["event_ID"],
+            "event_name": event["event_name"],
+            "formatted_date": formatted_date,
+            "capacity": event["capacity"],
+            "rsvp_count": rsvp_dict.get(event["event_ID"], 0)
+        })
+
     # Fetch reviews for the restaurant
     cursor.execute("""
         SELECT r.text, r.score, r.date_time, u.username 
@@ -104,28 +127,20 @@ def restaurant_detail(id):
     # Format review dates
     reviews_list = []
     for review in reviews:
-        date_obj = datetime.strptime(review["date_time"], "%Y-%m-%d %H:%M:%S.%f")
-        day = date_obj.day
-        suffix = 'th' if 10 <= day <= 20 else {1: 'st', 2: 'nd', 3: 'rd'}.get(day % 10, 'th')
-        formatted_date = date_obj.strftime(f"%B {day}{suffix}, %Y")
+        try:
+            date_obj = datetime.strptime(review["date_time"], "%Y-%m-%d %H:%M:%S.%f")
+            day = date_obj.day
+            suffix = 'th' if 10 <= day <= 20 else {1: 'st', 2: 'nd', 3: 'rd'}.get(day % 10, 'th')
+            formatted_date = date_obj.strftime(f"%B {day}{suffix}, %Y - %I:%M %p")
+        except ValueError:
+            formatted_date = review["date_time"]
+
         reviews_list.append({
             "username": review["username"],
             "text": review["text"],
             "score": review["score"],
             "formatted_date": formatted_date
         })
-
-    # Construct the events list with RSVP counts included
-    events_list = [
-        {
-            "event_ID": event["event_ID"],
-            "event_name": event["event_name"],
-            "date_time": event["date_time"],
-            "capacity": event["capacity"],
-            "rsvp_count": rsvp_dict.get(event["event_ID"], 0)
-        }
-        for event in events
-    ]
 
     # Fetch user data
     user_id = session.get('user_id')
@@ -150,7 +165,6 @@ def restaurant_detail(id):
     cursor.close()
     conn.close()
 
-    # Pass user object along with other data
     return render_template(
         "restaurant_detail.html",
         restaurant=restaurant,
@@ -158,6 +172,7 @@ def restaurant_detail(id):
         reviews=reviews_list,
         user=user
     )
+
 @restaurants.route("/create", methods=["GET", "POST"])
 def create_restaurant():
     # Check if user is logged in

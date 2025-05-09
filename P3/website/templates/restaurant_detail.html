@@ -19,7 +19,7 @@
 
         {% if user and user['role'] == 'owner' %}
             <a href="{{ url_for('restaurants.manage_restaurants') }}" 
-            style="background-color: #377ba8; color: #fff; padding: 0.5rem 1rem; border-radius: 8px; text-decoration: none;">
+               style="background-color: #377ba8; color: #fff; padding: 0.5rem 1rem; border-radius: 8px; text-decoration: none;">
                 Manage Restaurants
             </a>
         {% endif %}
@@ -67,7 +67,7 @@
             <li style="background-color: #f9f9f9; padding: 0.8rem 1rem; border-radius: 8px; margin-bottom: 0.8rem; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); display: flex; align-items: center;">
                 <div style="flex-grow: 1;">
                     <strong>{{ event['event_name'] }}</strong><br>
-                    <span style="color: gray;">Date: {{ event['date_time'] }}</span><br>
+                    <span style="color: gray;">Date: {{ event['formatted_date'] }}</span><br>
                     <span style="color: gray;">Capacity: {{ event['capacity'] }} | RSVPs: {{ event['rsvp_count'] }}</span>
                 </div>
             </li>
@@ -84,26 +84,14 @@
     {% if reviews %}
         <ul style="list-style-type: none; padding: 0; margin: 0;">
             {% for review in reviews %}
-            <!-- Events Section -->
-<div class="manage-restaurants-list" style="margin-bottom: 2rem;">
-    <h3>Events</h3>
-    {% if events %}
-        <ul style="list-style-type: none; padding: 0; margin: 0;">
-            {% for event in events %}
             <li style="background-color: #f9f9f9; padding: 0.8rem 1rem; border-radius: 8px; margin-bottom: 0.8rem; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); display: flex; align-items: center;">
                 <div style="flex-grow: 1;">
-                    <strong>{{ event['event_name'] }}</strong><br>
-                    <span style="color: gray;">Date: {{ event['formatted_date'] }}</span><br>
-                    <span style="color: gray;">Capacity: {{ event['capacity'] }} | RSVPs: {{ event['rsvp_count'] }}</span>
+                    <strong>{{ review['username'] }}</strong><br>
+                    <span style="color: gray;">Date: {{ review['formatted_date'] }}</span><br>
+                    <span style="color: gray;">Score: {{ review['score'] }}/5</span>
+                    <p>{{ review['text'] }}</p>
                 </div>
             </li>
-            {% endfor %}
-        </ul>
-    {% else %}
-        <p>No events for this restaurant.</p>
-    {% endif %}
-</div>
-
             {% endfor %}
         </ul>
     {% else %}
